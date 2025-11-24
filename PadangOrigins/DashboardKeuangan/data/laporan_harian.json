@@ -1,0 +1,12 @@
+[
+    {
+        "tanggal": "2025-11-24",
+        "waktu_tutup": "17:43:21",
+        "saldo_laci": 17410000,
+        "saldo_ops": 10000000,
+        "saldo_bank": 200000,
+        "total_aset": 27610000,
+        "omzet_hari_ini": 2610000,
+        "petugas": "admin"
+    }
+]

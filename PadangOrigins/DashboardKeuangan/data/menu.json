@@ -1,0 +1,30 @@
+[
+    {
+        "id": "MENU-001",
+        "nama": "Ayam Laos",
+        "harga": 22000,
+        "deskripsi": "Ayam goreng gurih kaya rempah laos.",
+        "gambar": "ayam-laos.jpeg"
+    },
+    {
+        "id": "MENU-002",
+        "nama": "Gulai Cincang",
+        "harga": 25000,
+        "deskripsi": "Potongan daging & jeroan kuah kental.",
+        "gambar": "cangcang.webp"
+    },
+    {
+        "id": "MENU-003",
+        "nama": "Kalio Daging",
+        "harga": 24000,
+        "deskripsi": "Rendang setengah jadi, bumbu basah.",
+        "gambar": "kalio-daging.jpeg"
+    },
+    {
+        "id": "MENU-1763883443",
+        "nama": "nasi kapau",
+        "harga": 16000,
+        "deskripsi": "test",
+        "gambar": "menu_1763883443.jpeg"
+    }
+]

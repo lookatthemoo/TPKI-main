@@ -1,0 +1,493 @@
+/* --- 1. RESET & GLOBAL --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --font-title: 'Oswald', sans-serif;
+    --font-body: 'Raleway', sans-serif;
+    --color-white: #FFFFFF;
+    --color-offwhite: #EAEAEA;
+    --color-gray: #AAAAAA;
+    --color-black: #000000;
+    --color-dark-bg: #0A0A0A;
+}
+
+/* Aktifkan smooth scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--color-black);
+    color: var(--color-white);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden; /* Mencegah scroll horizontal */
+}
+
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+section {
+    padding: 120px 0;
+    overflow: hidden; /* Penting untuk animasi */
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
+}
+
+/* --- 2. JUDUL & TOMBOL --- */
+.section-title {
+    font-family: var(--font-title);
+    font-size: 3.5rem; /* 56px */
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1.2;
+    margin-bottom: 30px;
+}
+
+.btn-primary {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: var(--color-white);
+    color: var(--color-black);
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 2px solid var(--color-white);
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: transparent;
+    color: var(--color-white);
+}
+
+/* --- 3. HEADER & NAVIGASI UTAMA --- */
+.main-header {
+    position: absolute; /* Tetap di atas tapi tidak fixed */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    padding: 30px 0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: var(--font-title);
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links a {
+    font-family: var(--font-body);
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    color: var(--color-gray);
+}
+
+.nav-links a:hover {
+    color: var(--color-white);
+}
+
+/* --- 4. NAVIGASI SAMPING (KIRI & KANAN) --- */
+.side-nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 99;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+.side-nav-left {
+    left: 40px; /* Jarak dari kiri */
+}
+
+.side-nav-right {
+    right: 40px; /* Jarak dari kanan */
+}
+
+.vertical-text {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    color: var(--color-gray);
+}
+
+.scroll-dots {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.scroll-dots .dot {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border: 1px solid var(--color-gray);
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.scroll-dots .dot.active,
+.scroll-dots .dot:hover {
+    background-color: var(--color-white);
+    border-color: var(--color-white);
+}
+
+/* --- 5. SECTION 1: HERO --- */
+.hero-section {
+    height: 100vh;
+    padding: 0; /* Full bleed */
+    background-size: cover;
+    background-position: center;
+    background-color: var(--color-black); /* Fallback */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative; /* Untuk overlay */
+}
+
+/* Overlay gelap agar teks terbaca */
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.hero-content {
+    position: relative; /* Di atas overlay */
+    z-index: 2;
+}
+
+.hero-content .subtitle {
+    display: block;
+    font-size: 1.5rem; /* 24px */
+    font-family: var(--font-body);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-offwhite);
+}
+
+.hero-content .title {
+    font-family: var(--font-title);
+    font-size: 10rem; /* 160px - SANGAT BESAR */
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 5px;
+    color: var(--color-white);
+}
+
+/* --- 6. SECTION 2: STORY --- */
+.story-section {
+    background-color: var(--color-dark-bg);
+}
+
+.story-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.story-text h3 {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+.story-text p {
+    color: var(--color-gray);
+    margin-bottom: 20px;
+}
+
+.story-image img {
+    border-left: 5px solid var(--color-white);
+    padding-left: 20px;
+}
+
+/* --- 7. SECTION 3: GALLERY --- */
+.gallery-section {
+    background-color: var(--color-black);
+    padding: 60px 0;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+}
+
+.gallery-item {
+    height: 350px;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.4s ease, filter 0.4s ease;
+    filter: grayscale(80%);
+}
+
+.gallery-item:hover {
+    transform: scale(1.05);
+    z-index: 5;
+    filter: grayscale(0%);
+}
+
+/* --- 8. SECTION 4: TIMELINE --- */
+.timeline-section {
+    background-color: var(--color-dark-bg);
+}
+
+.timeline-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.timeline-item {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #222;
+}
+
+.timeline-item:last-child {
+    border-bottom: none;
+}
+
+.timeline-number {
+    font-family: var(--font-title);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-gray);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.timeline-item h3 {
+    font-family: var(--font-title);
+    font-size: 2rem;
+    font-weight: 500;
+    margin: 5px 0 10px 0;
+}
+
+.timeline-item p {
+    color: var(--color-gray);
+}
+
+.timeline-image img {
+    filter: grayscale(100%);
+}
+
+/* --- 9. SECTION 5: PHILOSOPHY (Layout kebalikan dari Timeline) --- */
+.philosophy-section {
+    background-color: var(--color-black);
+}
+
+.philosophy-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+/* Urutan dibalik: gambar dulu, baru teks */
+.philosophy-image {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+}
+
+.philosophy-text {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+.philosophy-image img {
+     filter: grayscale(100%);
+}
+
+.philosophy-item {
+    margin-bottom: 25px;
+}
+
+.philosophy-item h3 {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    border-left: 3px solid var(--color-white);
+    padding-left: 15px;
+    margin-bottom: 10px;
+}
+
+.philosophy-item p {
+    color: var(--color-gray);
+    padding-left: 18px;
+}
+
+
+/* --- 10. SECTION 6: CONTACT --- */
+.contact-section {
+    height: 90vh;
+    padding: 0;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* EFEK PARALLAX */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+/* Overlay gelap */
+.contact-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.contact-content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+}
+
+.contact-content .section-title {
+    font-size: 4rem;
+}
+
+.contact-content p {
+    font-size: 1.25rem;
+    color: var(--color-offwhite);
+    margin-bottom: 40px;
+}
+
+/* --- 11. FOOTER --- */
+.main-footer {
+    padding: 50px 0;
+    text-align: center;
+    background-color: var(--color-dark-bg);
+}
+
+.main-footer p {
+    color: var(--color-gray);
+    font-family: var(--font-body);
+}
+
+/* --- 12. ANIMASI (untuk JS) --- */
+.reveal {
+    opacity: 0;
+    transform: translateY(60px);
+    transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+}
+
+.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- 13. RESPONSIVE (Sangat Dasar) --- */
+@media (max-width: 992px) {
+    .section-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-content .title {
+        font-size: 6rem;
+    }
+
+    /* Sembunyikan nav samping di mobile */
+    .side-nav {
+        display: none;
+    }
+
+    /* Ubah layout grid 2 kolom menjadi 1 kolom */
+    .story-body,
+    .timeline-content,
+    .philosophy-content {
+        grid-template-columns: 1fr;
+    }
+
+    /* Atur ulang urutan untuk philosophy */
+    .philosophy-image {
+        grid-row: 1 / 2;
+    }
+    .philosophy-text {
+        grid-row: 2 / 3;
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .hero-content .title {
+        font-size: 4rem;
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .contact-content .section-title {
+        font-size: 3rem;
+    }
+}

@@ -1,0 +1,412 @@
+/* =========================================
+   1. BASE STYLES (GLOBAL)
+========================================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f7f9;
+    color: #333;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.container {
+    width: 92%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+main.container {
+    padding-top: 2rem;
+    padding-bottom: 6rem;
+}
+
+/* =========================================
+   2. NAVBAR
+========================================= */
+.navbar {
+    background: #fff;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.navbar .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.navbar .logo {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #2575fc;
+    letter-spacing: -0.5px;
+}
+
+.navbar nav {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+
+.navbar .nav-link {
+    font-weight: 600;
+    color: #777;
+    padding: 0.6rem 1rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    background: #f8f9fa;
+}
+
+.navbar .nav-link.active {
+    background: #eef2ff;
+    color: #6a11cb;
+    box-shadow: 0 2px 4px rgba(106, 17, 203, 0.1);
+}
+
+.navbar .btn-logout {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+/* =========================================
+   3. DASHBOARD BARU (MODEL KARTU / FINANCIAL AI CORE)
+   Digunakan di index.php
+========================================= */
+
+.welcome-message {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.main-nav-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+    padding-bottom: 4rem;
+    justify-items: center;
+}
+
+.nav-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 380px;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: space-between;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border-color: rgba(37, 117, 252, 0.3);
+}
+
+/* Ikon Bulat Besar */
+.card-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #eef2f3 100%);
+    width: 90px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #333;
+}
+
+/* Teks Kartu */
+.nav-card h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    color: #2c3e50;
+}
+
+.nav-card p {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+/* Tombol dalam Kartu */
+.card-btn {
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+    margin-top: auto;
+}
+
+/* Varian Warna Tombol */
+.btn-blue { background: #2575fc; color: white; box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3); }
+.btn-blue:hover { background: #1a60d6; transform: scale(1.05); }
+
+.btn-orange { background: #ff9f43; color: white; box-shadow: 0 4px 15px rgba(255, 159, 67, 0.3); }
+.btn-orange:hover { background: #f39c12; transform: scale(1.05); }
+
+.btn-red { background: #ff6b6b; color: white; box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); }
+.btn-red:hover { background: #ee5253; transform: scale(1.05); }
+
+/* Badge Status (Pojok Kanan Atas Kartu) */
+.status-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #dff9fb;
+    color: #22a6b3;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+.badge-dev { background: #fff3cd; color: #f39c12; }
+
+
+/* =========================================
+   4. KOMPONEN HALAMAN LAIN (Laporan & Pesanan)
+========================================= */
+
+/* Card Dasar (Dipakai di laporan.php) */
+.summary-card, .split-card, .report-container, .chart-container, .owner-wallet-section, .wd-section, .order-column {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+/* Grid Layout Laporan */
+.summary-grid, .split-layout, .split-layout-3, .order-kanban-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.summary-card h3 { font-size: 1rem; color: #888; margin-bottom: 0.5rem; font-weight: 500; }
+.summary-card p { font-size: 2rem; font-weight: 700; line-height: 1.1; margin-top: 0.5rem; }
+.card-pendapatan { border-left: 5px solid #2ecc71; } .card-pendapatan p { color: #2ecc71; }
+.card-pengeluaran { border-left: 5px solid #e74c3c; } .card-pengeluaran p { color: #e74c3c; }
+
+/* Wallet Section (Laporan.php) */
+.owner-wallet-section {
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+    color: white;
+    text-align: center;
+    gap: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+.wallet-balance { font-size: 2.5rem; font-weight: 800; margin: 0.2rem 0 1rem 0; color: white; }
+.btn-group-wd { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; width: 100%; }
+.btn-withdraw {
+    padding: 1rem 0.5rem; border: none; border-radius: 12px; font-weight: 700;
+    width: 100%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; color: white; transition: transform 0.2s; cursor: pointer;
+}
+.btn-withdraw:active { transform: scale(0.97); }
+.btn-wd-owner { background: #e67e22; box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3); }
+.btn-wd-biz { background: #e74c3c; box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3); }
+
+/* Form Filter */
+.filter-section form { flex-direction: column; align-items: stretch !important; gap: 1rem; }
+.filter-section button { width: 100%; padding: 1rem; font-size: 1rem; }
+input, select, textarea, button { font-family: inherit; font-size: 1rem; }
+
+/* Tabel */
+.table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 1rem;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+}
+table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+table th, table td { padding: 1rem; text-align: left; border-bottom: 1px solid #f5f5f5; }
+table th { background: #f8f9fa; color: #999; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+
+/* Laporan 3 Kolom (Masuk, Keluar Bisnis, Keluar Owner) */
+.split-card { padding: 1.5rem; }
+.split-header { display: flex; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 2px dashed #f5f5f5; }
+.split-icon { font-size: 1.8rem; margin-right: 1rem; padding: 0.8rem; border-radius: 12px; }
+.big-number { font-size: 2rem; font-weight: 700; }
+.card-in .split-icon { background: #e6f9ed; color: #2ecc71; }
+.card-biz .split-icon { background: #fdeaea; color: #e74c3c; }
+.card-owner .split-icon { background: #fff5e6; color: #e67e22; }
+.text-green { color: #2ecc71; }
+.text-red { color: #e74c3c; }
+.text-orange { color: #e67e22; }
+
+/* Kanban Pesanan */
+.order-card { padding: 1rem; border: 1px solid #eee; box-shadow: none; }
+.order-items { font-size: 1rem; list-style: none; }
+.order-items li { padding: 0.5rem 0; border-bottom: 1px dashed #eee; display: flex; }
+.item-qty { font-weight: 700; color: #333; margin-right: 8px; min-width: 25px; }
+.btn-status { width: 100%; padding: 0.6rem; border: none; border-radius: 8px; color: white; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-top: 0.5rem; }
+.btn-proses { background: linear-gradient(to right, #007bff, #0056b3); }
+.btn-selesai { background: linear-gradient(to right, #28a745, #218838); }
+.order-card.order-completed { opacity: 0.7; }
+
+
+/* =========================================
+   5. MODAL (POPUP)
+========================================= */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    align-items: flex-end; /* Mobile: muncul dari bawah */
+}
+
+.modal-content {
+    background: #fff;
+    padding: 2rem 1.5rem;
+    width: 100%;
+    border-radius: 24px 24px 0 0;
+    animation: slideUp 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.modal-form-group { margin-bottom: 1.2rem; }
+.modal-form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #555; }
+.modal-form-group input, .modal-form-group textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #eee;
+    border-radius: 12px;
+    transition: border-color 0.3s;
+}
+.modal-form-group input:focus, .modal-form-group textarea:focus {
+    border-color: #2575fc;
+    outline: none;
+}
+.btn-submit-wd {
+    width: 100%;
+    padding: 1.2rem;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+
+/* =========================================
+   6. MEDIA QUERIES (RESPONSIVE)
+========================================= */
+
+/* TABLET (Min 768px) */
+@media (min-width: 768px) {
+    body { font-size: 15px; }
+    
+    .navbar { padding: 1rem 0; }
+    .navbar .container { flex-direction: row; justify-content: space-between; }
+    .navbar nav { width: auto; gap: 0.5rem; }
+    
+    .summary-grid, .split-layout { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    
+    .owner-wallet-section {
+        flex-direction: row;
+        text-align: left;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2.5rem;
+    }
+    .btn-group-wd { width: auto; display: flex; gap: 1rem; }
+    .btn-withdraw { width: auto; padding: 1rem 2rem; font-size: 1rem; }
+    
+    .filter-section form { flex-direction: row; align-items: flex-end !important; }
+    .filter-section button { width: auto; }
+    
+    .modal-overlay { align-items: center; justify-content: center; }
+    .modal-content {
+        max-width: 480px;
+        border-radius: 24px;
+        animation: zoomIn 0.25s ease-out;
+    }
+    @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+}
+
+/* LAPTOP / DESKTOP (Min 1024px) */
+@media (min-width: 1024px) {
+    .container { width: 90%; max-width: 1200px; }
+    
+    .navbar nav { gap: 1.5rem; }
+    .navbar .nav-link { background: transparent; border-radius: 8px; padding: 0.5rem 1rem; }
+    .navbar .nav-link.active { background: #eef2ff; box-shadow: none; }
+
+    .summary-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    
+    /* Aturan 3 Kolom Laporan agar rapi di tengah */
+    .split-layout-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(300px, 360px));
+        gap: 1.5rem;
+        justify-content: center;
+    }
+    
+    /* Kanban Pesanan Full Width */
+    .order-kanban-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+    
+    table th, table td { padding: 1.2rem; }
+}
+
+/* PRINT STYLE */
+@media print {
+    .no-print, .navbar, .btn-group-wd, .quick-actions, .main-nav-cards { display: none !important; }
+    body { background: white; }
+    .container { width: 100%; max-width: 100%; }
+}

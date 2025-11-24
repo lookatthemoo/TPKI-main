@@ -1,0 +1,223 @@
+/* =========================================
+   STYLE KHUSUS PORTAL KARYAWAN (TEMA HIJAU)
+   File: karyawan/style.css
+   Updated: Clean & Login Support
+========================================= */
+
+/* 1. RESET & GLOBAL */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #ecfdf5; /* Hijau Mint */
+    color: #1f2937;
+    padding-bottom: 3rem;
+    min-height: 100vh;
+}
+
+.container {
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+a { text-decoration: none; }
+
+/* 2. NAVBAR */
+.navbar {
+    background: #ffffff;
+    padding: 1rem 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    margin-bottom: 1.5rem;
+}
+
+.nav-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: #059669; /* Emerald Green */
+    letter-spacing: -0.5px;
+}
+
+.btn-logout {
+    color: #ef4444;
+    font-weight: 600;
+    font-size: 0.9rem;
+    background: #fef2f2;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+.btn-logout:hover { background: #fee2e2; }
+
+
+/* 3. KARTU ABSENSI */
+.absen-card {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    text-align: center;
+    margin-bottom: 1.5rem;
+    border: 1px solid #d1fae5;
+}
+
+.date-display {
+    color: #6b7280;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.time-display {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #059669;
+    margin: 0.5rem 0 1.5rem 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.btn-absen {
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    width: 100%;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    transition: transform 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.btn-absen:active { transform: scale(0.98); }
+.btn-absen.disabled { background: #e5e7eb; color: #9ca3af; box-shadow: none; cursor: not-allowed; }
+
+
+/* 4. INFO GRID (Hadir & Performa) */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-card {
+    background: white;
+    padding: 1.2rem;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    border: 1px solid #f3f4f6;
+}
+.info-card h4 { font-size: 0.85rem; color: #9ca3af; margin-bottom: 5px; }
+.info-card .val { font-size: 1.3rem; font-weight: 700; color: #374151; }
+
+
+/* 5. FORM AREA (Tarik Uang & Login) */
+.action-area {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+.action-area h3 { font-size: 1.1rem; color: #374151; margin-bottom: 1rem; border-bottom: 1px dashed #eee; padding-bottom: 10px; }
+
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: #4b5563; font-size: 0.9rem; }
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #f3f4f6;
+    border-radius: 10px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+    background: #f9fafb;
+}
+.form-control:focus { border-color: #10b981; background: #fff; }
+
+.btn-tarik {
+    width: 100%;
+    padding: 14px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+.btn-tarik:hover { background: #dc2626; }
+.btn-tarik:disabled { background: #e5e7eb; color: #9ca3af; box-shadow: none; cursor: not-allowed; }
+
+
+/* =========================================
+   6. HALAMAN LOGIN (Style Tambahan)
+========================================= */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.login-box {
+    background: #ffffff;
+    width: 100%;
+    max-width: 400px;
+    padding: 2.5rem;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    border: 1px solid #e5e7eb;
+}
+
+.login-box h2 {
+    color: #059669;
+    font-size: 1.6rem;
+    margin-bottom: 2rem;
+    font-weight: 800;
+}
+
+.login-box .form-group { text-align: left; }
+
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 1rem;
+    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+    transition: transform 0.2s;
+}
+.btn-login:hover { transform: translateY(-3px); }
+.btn-login:active { transform: scale(0.98); }

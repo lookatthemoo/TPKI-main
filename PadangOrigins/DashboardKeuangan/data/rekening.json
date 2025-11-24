@@ -1,0 +1,58 @@
+[
+    {
+        "id": "BANK-BCA",
+        "nama_bank": "BCA",
+        "jenis": "bank",
+        "nomer": "8901234567",
+        "saldo": 0
+    },
+    {
+        "id": "BANK-MANDIRI",
+        "nama_bank": "Mandiri",
+        "jenis": "bank",
+        "nomer": "12300098765",
+        "saldo": 0
+    },
+    {
+        "id": "BANK-BRI",
+        "nama_bank": "BRI",
+        "jenis": "bank",
+        "nomer": "3456789012",
+        "saldo": 0
+    },
+    {
+        "id": "BANK-BNI",
+        "nama_bank": "BNI",
+        "jenis": "bank",
+        "nomer": "9876543210",
+        "saldo": 0
+    },
+    {
+        "id": "BANK-SEABANK",
+        "nama_bank": "SeaBank",
+        "jenis": "bank",
+        "nomer": "9012345678",
+        "saldo": 0
+    },
+    {
+        "id": "EWAL-GOPAY",
+        "nama_bank": "GoPay",
+        "jenis": "ewallet",
+        "nomer": "081234567890",
+        "saldo": 0
+    },
+    {
+        "id": "EWAL-OVO",
+        "nama_bank": "OVO",
+        "jenis": "ewallet",
+        "nomer": "081234567890",
+        "saldo": 0
+    },
+    {
+        "id": "EWAL-DANA",
+        "nama_bank": "DANA",
+        "jenis": "ewallet",
+        "nomer": "081234567890",
+        "saldo": 0
+    }
+]

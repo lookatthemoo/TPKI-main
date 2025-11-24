@@ -1,0 +1,161 @@
+<?php
+require_once 'auth_check.php';
+
+// Data Ringkas untuk Tampilan Dashboard
+$fileTrx = 'data/transaksi.json';
+$fileMenu = 'data/menu.json';
+
+// Hitung Kas Sekilas
+$transaksiData = file_exists($fileTrx) ? json_decode(file_get_contents($fileTrx), true) : [];
+$kasTotal = 0;
+foreach ($transaksiData as $t) {
+    if ($t['tipe'] === 'pendapatan') $kasTotal += $t['jumlah'];
+    elseif ($t['tipe'] === 'pengeluaran' || $t['tipe'] === 'penarikan') $kasTotal -= $t['jumlah'];
+}
+
+// Hitung Jumlah Menu
+$menuList = file_exists($fileMenu) ? json_decode(file_get_contents($fileMenu), true) : [];
+$totalMenu = count($menuList);
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=<?php echo time(); ?>">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="container">
+            <h1 class="logo">Financial AI Core</h1>
+            <nav>
+                <a href="index.php" class="nav-link active">Dashboard</a>
+                <a href="logout.php" class="nav-link btn-logout">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <?php if(isset($_GET['status']) && $_GET['status'] == 'menu_added'): ?>
+            <div style="background:#dcfce7; color:#166534; padding:15px; border-radius:10px; margin-bottom:20px; text-align:center; border:1px solid #bbf7d0;">
+                ✅ Menu Berhasil Ditambahkan!
+            </div>
+        <?php endif; ?>
+
+        <div class="welcome-message">
+            <h2>Halo, <?php echo htmlspecialchars($_SESSION['admin_username'] ?? 'Admin'); ?>! 👋</h2>
+            <p>Pusat kendali operasional restoran Anda.</p>
+        </div>
+
+        <section class="main-nav-cards">
+
+            <div class="nav-card">
+                <span class="status-badge" style="background:#e0fcf6; color:#00b894;">DAILY</span>
+                <div class="card-icon" style="color: #00b894; background: #e0fcf6;">📊</div>
+                <h3>Laporan Harian</h3>
+                <p>Pantau Kas, Omzet Hari Ini, dan Pengeluaran Harian.</p>
+                <a href="laporan/" class="card-btn" style="background: #00b894; color: white; box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);">Buka Laporan ➔</a>
+            </div>
+
+            <div class="nav-card">
+                <span class="status-badge" style="background:#fff3cd; color:#856404;">STOCK</span>
+                <div class="card-icon" style="color: #f39c12; background: #fff3cd;">📦</div>
+                <h3>Stok & Inventaris</h3>
+                <p>Kelola <?php echo $totalMenu; ?> item menu yang tersedia saat ini.</p>
+                <a href="inventaris/" class="card-btn" style="background: #f39c12; color: white; box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);">Cek Inventaris ➔</a>
+            </div>
+
+            <div class="nav-card">
+                <span class="status-badge">LIVE</span>
+                <div class="card-icon">🍳</div>
+                <h3>Dapur & Pesanan</h3>
+                <p>Pantau pesanan masuk secara real-time.</p>
+                <a href="pesanan.php" class="card-btn btn-blue">Buka Dapur ➔</a>
+            </div>
+
+            <div class="nav-card">
+                <span class="status-badge badge-dev">REPORT</span>
+                <div class="card-icon">💰</div>
+                <h3>Laporan Lengkap</h3>
+                <p>Analisa keuangan bulanan dan penarikan dana.</p>
+                <a href="laporan.php" class="card-btn btn-orange">Analisa Full ➔</a>
+            </div>
+
+            <div class="nav-card">
+                <span class="status-badge" style="background:#e3f2fd; color:#1565c0;">HRD</span>
+                <div class="card-icon" style="color:#673ab7;">👥</div>
+                <h3>Gaji & Karyawan</h3>
+                <p>Manajemen tim, absensi, dan penggajian.</p>
+                <a href="gaji.php" class="card-btn" style="background:#673ab7; color:white;">Kelola Tim ➔</a>
+            </div>
+
+            <div class="nav-card">
+                <div class="card-icon" style="color: #e74c3c; background: #fff5f5;">📝</div>
+                <h3>Catat Pengeluaran</h3>
+                <p>Input biaya operasional dadakan.</p>
+                <button onclick="bukaModalExp()" class="card-btn btn-red">Input Data +</button>
+            </div>
+
+            <div class="nav-card">
+                <div class="card-icon" style="color: #9b59b6; background: #f5eef8;">🍔</div>
+                <h3>Kelola Menu</h3>
+                <p>Tambah menu baru dan upload foto.</p>
+                <button onclick="bukaModalMenu()" class="card-btn" style="background: #9b59b6; color: white;">Tambah Menu +</button>
+            </div>
+
+        </section>
+
+    </main>
+
+    <div id="modalExp" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header"><h2>📤 Catat Pengeluaran</h2><span class="close-modal" onclick="tutupModalExp()">×</span></div>
+            <form action="tambah_pengeluaran.php" method="POST">
+                <div class="modal-form-group"><label>Jumlah (Rp) *</label><input type="number" name="amount" required min="1"></div>
+                <div class="modal-form-group"><label>Keperluan *</label><input type="text" name="deskripsi" required></div>
+                <button type="submit" class="btn-submit-wd">Simpan Data</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalMenu" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header"><h2>🍔 Tambah Menu Baru</h2><span class="close-modal" onclick="tutupModalMenu()">×</span></div>
+            <form action="proses_menu.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="add_menu">
+                <div class="modal-form-group"><label>Nama Makanan</label><input type="text" name="nama" required placeholder="Contoh: Rendang Daging"></div>
+                <div class="modal-form-group"><label>Harga (Rp)</label><input type="number" name="harga" required placeholder="20000"></div>
+                <div class="modal-form-group"><label>Deskripsi Singkat</label><textarea name="deskripsi" rows="2" required placeholder="Potongan daging sapi empuk..."></textarea></div>
+                <div class="modal-form-group"><label>Foto Makanan</label><input type="file" name="gambar" accept="image/*" required style="padding: 5px;"><small style="color:#e74c3c;">*Wajib Upload Foto (JPG/PNG/WEBP)</small></div>
+                <button type="submit" class="btn-submit-wd" style="background: #9b59b6;">Simpan Menu</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const mE = document.getElementById('modalExp');
+        function bukaModalExp() { mE.style.display = "flex"; }
+        function tutupModalExp() { mE.style.display = "none"; }
+
+        const mM = document.getElementById('modalMenu');
+        function bukaModalMenu() { mM.style.display = "flex"; }
+        function tutupModalMenu() { mM.style.display = "none"; }
+
+        // Cek URL kalau ada request buka modal dari halaman lain
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.get('action') === 'buka_modal_menu') {
+            bukaModalMenu();
+        }
+
+        window.onclick = (e) => { 
+            if(e.target == mE) mE.style.display = "none";
+            if(e.target == mM) mM.style.display = "none";
+        }
+    </script>
+
+</body>
+</html>
