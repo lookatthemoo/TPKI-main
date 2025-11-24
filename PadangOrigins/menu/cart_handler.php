@@ -52,10 +52,12 @@ switch ($action) {
         $response = ['cart' => [], 'total' => 0, 'success' => true];
         break;
 
-case 'checkout':
+    case 'checkout':
         if (count($_SESSION['cart']) > 0) {
+            // DEFINE FILE PATHS
             $transaksiFile = '../DashboardKeuangan/data/transaksi.json'; 
-            
+            $rekeningFile  = '../DashboardKeuangan/data/rekening.json'; // File Rekening
+
             // Ambil data dari input JS
             $custName = $input['customer_name'] ?? 'Pelanggan';
             $payMethod = $input['payment_method'] ?? 'kas_laci';
@@ -67,27 +69,52 @@ case 'checkout':
             }
             $descString = implode(", ", $itemDetails);
 
-            // Tentukan Tujuan Uang (Untuk Laporan Keuangan)
-            // Jika 'kas_laci', masuk ke Laci. Jika Bank, masuk ke Bank tersebut.
-            // Di Laporan Keuangan nanti:
-            // - Jika tipe='pendapatan' dan akun_tujuan='kas_laci' -> Tambah Saldo Laci
-            // - Jika tipe='pendapatan' dan akun_tujuan='BCA' -> Tambah Saldo BCA
-            
             $orderId = uniqid('order_');
             $total = calculateTotal();
 
+            // ==============================================================
+            // 1. LOGIKA UPDATE SALDO REKENING (Auto-Sync)
+            // ==============================================================
+            if (file_exists($rekeningFile)) {
+                $rekeningData = json_decode(file_get_contents($rekeningFile), true);
+                $isRekeningUpdated = false;
+
+                foreach ($rekeningData as &$rek) {
+                    // Cek kecocokan Nama Bank (misal: BCA == BCA) atau ID (BANK-BCA)
+                    // Menggunakan strtolower agar tidak sensitif huruf besar/kecil
+                    if (strtolower($rek['nama_bank']) === strtolower($payMethod) || 
+                        strtolower($rek['id']) === strtolower($payMethod)) {
+                        
+                        // TAMBAH SALDO!
+                        $rek['saldo'] += $total;
+                        $isRekeningUpdated = true;
+                        
+                        // Ubah payMethod jadi nama resmi banknya agar rapi di laporan
+                        $payMethod = $rek['nama_bank']; 
+                        break; 
+                    }
+                }
+
+                // Simpan perubahan saldo jika ada rekening yang cocok
+                if ($isRekeningUpdated) {
+                    file_put_contents($rekeningFile, json_encode($rekeningData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+                }
+            }
+            // ==============================================================
+
+            // 2. SIMPAN TRANSAKSI KE LOG
             $newTransaction = [
                 'id'          => $orderId,
                 'tanggal'     => date('Y-m-d H:i:s'),
-                'tipe'        => 'pendapatan', // Tetap pendapatan
+                'tipe'        => 'pendapatan', 
                 'status'      => 'Diterima',
                 'jumlah'      => $total,
                 
-                // KOLOM BARU UNTUK LAPORAN KEUANGAN PRO
-                'akun_sumber' => 'Customer', // Uang dari Customer
-                'akun_tujuan' => $payMethod, // Masuk ke Laci / Bank
-                'deskripsi'   => "Order ($custName): $descString", // Deskripsi Lengkap
-                'pelaku'      => 'System', // Tercatat otomatis
+                // DATA KEUANGAN
+                'akun_sumber' => 'Customer', 
+                'akun_tujuan' => $payMethod, // Ini akan berisi "BCA", "GoPay", atau "kas_laci"
+                'deskripsi'   => "Order ($custName): $descString",
+                'pelaku'      => 'System',
                 
                 'items'       => $_SESSION['cart'],
                 'customer_name' => $custName
@@ -97,10 +124,11 @@ case 'checkout':
             $transaksiData[] = $newTransaction;
             file_put_contents($transaksiFile, json_encode($transaksiData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
+            // RESET CART
             $_SESSION['cart'] = []; 
             $_SESSION['current_order_id'] = $orderId; 
             
-            $response = ['success' => true, 'message' => 'Checkout berhasil!', 'cart' => [], 'total' => 0, 'order_id' => $orderId, 'order_status' => 'Diterima'];
+            $response = ['success' => true, 'message' => 'Checkout berhasil & Saldo Terupdate!', 'cart' => [], 'total' => 0, 'order_id' => $orderId, 'order_status' => 'Diterima'];
         } else {
              $response = ['success' => false, 'message' => 'Keranjang kosong.'];
         }

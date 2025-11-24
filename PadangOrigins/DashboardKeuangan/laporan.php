@@ -1,47 +1,66 @@
 <?php
-// --- SETUP & LOGIC ---
-require_once 'auth_check.php';
-$base_dir = __DIR__; 
-$file_harian = $base_dir . '/data/laporan_harian.json';
+require_once 'auth_check.php'; // Pastikan path ini benar sesuai struktur folder Anda
 
-// Variables
-$riwayat = [];
-$total_omzet_all = 0;
-$total_uang_real = 0; // Total kekayaan saat ini
-$saldo_laci_terkini = 0;
-$saldo_bank_terkini = 0;
+// --- KONFIGURASI & PATH ---
+$baseDir = __DIR__; // Folder saat ini (DashboardKeuangan)
+$dataDir = $baseDir . '/data/'; // Folder data
+$configFile = $dataDir . 'laporan_config.json'; // File untuk simpan susunan widget
 
-if (file_exists($file_harian)) {
-    $json_raw = file_get_contents($file_harian);
-    $decoded = json_decode($json_raw, true);
+// Pastikan file config ada
+if (!file_exists($configFile)) {
+    file_put_contents($configFile, '[]');
+}
 
-    if (is_array($decoded)) {
-        $riwayat = $decoded;
-        
-        // Sorting
-        usort($riwayat, function ($a, $b) {
-            $t_a = strtotime($a['tanggal'] . ' ' . ($a['waktu_tutup'] ?? '00:00'));
-            $t_b = strtotime($b['tanggal'] . ' ' . ($b['waktu_tutup'] ?? '00:00'));
-            return $t_b - $t_a;
-        });
+// --- 1. HANDLE REQUEST (POST) ---
+// Bagian ini menangani saat tombol Simpan atau Hapus ditekan
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $configData = json_decode(file_get_contents($configFile), true) ?? [];
+    $action = $_POST['action'] ?? '';
 
-        // Hitung Total Omzet (Akumulasi Penjualan)
-        foreach ($riwayat as $r) {
-            $total_omzet_all += $r['omzet_hari_ini'] ?? 0;
+    // A. TAMBAH WIDGET BARU
+    if ($action === 'tambah_widget') {
+        $nama = htmlspecialchars($_POST['nama_laporan']);
+        $sumber = $_POST['sumber_json'];
+
+        $configData[] = [
+            'name' => $nama,
+            'source' => $sumber,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+
+        file_put_contents($configFile, json_encode($configData, JSON_PRETTY_PRINT));
+        header("Location: laporan.php"); // Refresh halaman
+        exit;
+    }
+
+    // B. HAPUS WIDGET
+    if ($action === 'hapus_widget') {
+        $index = (int)$_POST['index'];
+        if (isset($configData[$index])) {
+            array_splice($configData, $index, 1);
+            file_put_contents($configFile, json_encode($configData, JSON_PRETTY_PRINT));
         }
+        header("Location: laporan.php"); // Refresh halaman
+        exit;
+    }
+}
 
-        // Ambil Data Terkini (Snapshot Keuangan Saat Ini)
-        if (!empty($riwayat)) {
-            // Kita ambil data dari baris paling atas (terbaru)
-            $terbaru = $riwayat[0];
-            $saldo_laci_terkini = $terbaru['saldo_laci'] ?? 0;
-            $saldo_bank_terkini = $terbaru['saldo_bank'] ?? 0;
-            
-            // Total Uang Real = Apa yang tertulis di Total Aset JSON
-            $total_uang_real = $terbaru['total_aset'] ?? 0;
+// --- 2. SCAN FILE JSON (UNTUK PILIHAN SUMBER DATA) ---
+$jsonFiles = [];
+if (is_dir($dataDir)) {
+    $files = scandir($dataDir);
+    foreach ($files as $f) {
+        if (pathinfo($f, PATHINFO_EXTENSION) === 'json') {
+            // Sembunyikan file sistem agar tidak dipilih
+            if ($f !== 'laporan_config.json' && $f !== 'user_config.json') { 
+                $jsonFiles[] = $f;
+            }
         }
     }
 }
+
+// --- 3. LOAD WIDGETS UNTUK DITAMPILKAN ---
+$myReports = json_decode(file_get_contents($configFile), true) ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -49,198 +68,206 @@ if (file_exists($file_harian)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial AI Core - Realtime</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
+    <title>Laporan Modular</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=<?php echo time(); ?>">
     <style>
-        /* --- AI CORE THEME 2.0 (High Contrast) --- */
-        :root {
-            --bg-core: #0f172a;
-            --panel-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --accent-cyan: #06b6d4;
-            --accent-green: #22c55e;
-            --accent-purple: #8b5cf6;
-            --border-glass: rgba(255, 255, 255, 0.1);
+        /* Layout Grid Widget */
+        .widgets-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 2rem;
         }
 
-        body {
-            background-color: var(--bg-core);
-            color: var(--text-main);
-            font-family: 'Space Grotesk', sans-serif;
-            padding: 2rem;
-        }
-
-        .btn-back {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border-glass);
-            color: var(--text-sub);
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            transition: 0.3s;
-            display: inline-flex;
-            align-items: center;
-        }
-        .btn-back:hover {
-            background: var(--accent-cyan);
-            color: #000;
-            box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
-        }
-
-        /* CARD HEADER UTAMA (Money Focus) */
-        .money-card {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 1) 100%);
-            border: 1px solid var(--border-glass);
-            border-radius: 24px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
-            position: relative;
-            overflow: hidden;
+        /* Desain Kartu Laporan */
+        .report-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: 1px solid #f1f5f9;
+            animation: fadeIn 0.5s ease;
         }
         
-        .money-label { font-size: 0.85rem; text-transform: uppercase; color: var(--text-sub); letter-spacing: 1px; margin-bottom: 0.5rem; }
-        .money-value { font-size: 2.5rem; font-weight: 700; color: #fff; }
-        .money-sub { font-size: 0.9rem; color: var(--accent-green); }
+        .report-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-bottom: 1rem; border-bottom: 2px dashed #f1f5f9; margin-bottom: 1rem;
+        }
+        
+        .report-title { font-size: 1.1rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 10px; }
+        .file-badge { font-size: 0.75rem; background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
 
-        /* TABEL LOG */
-        .table-container {
-            background: var(--panel-bg);
-            border-radius: 20px;
-            border: 1px solid var(--border-glass);
-            overflow: hidden;
-        }
-        .table-ai { width: 100%; border-collapse: collapse; }
-        .table-ai th {
-            text-align: left;
-            padding: 1.5rem;
-            color: var(--text-sub);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            border-bottom: 1px solid var(--border-glass);
-            background: rgba(0,0,0,0.2);
-        }
-        .table-ai td {
-            padding: 1.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            color: var(--text-main);
-        }
-        .table-ai tr:hover td { background: rgba(255,255,255,0.02); }
+        /* Tabel Dinamis */
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .data-table th { background: #f8fafc; padding: 12px; text-align: left; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; }
+        .data-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; color: #334155; }
+        .data-table tr:hover td { background: #f8fafc; }
 
-        /* Badge Style */
-        .badge-money {
-            padding: 5px 10px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border-glass);
-            margin-right: 5px;
-        }
-        .c-cyan { color: var(--accent-cyan); border-color: rgba(6, 182, 212, 0.3); }
-        .c-purple { color: var(--accent-purple); border-color: rgba(139, 92, 246, 0.3); }
+        /* Tombol & Modal */
+        .btn-add { background: #2c3e50; color: white; padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(44, 62, 80, 0.2); }
+        .btn-delete { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.2rem; opacity: 0.6; transition: 0.2s; }
+        .btn-delete:hover { opacity: 1; transform: scale(1.1); }
 
-        @media(max-width:768px) {
-            .money-value { font-size: 1.8rem; }
-            .d-flex-gap { flex-direction: column; gap: 1rem; }
-        }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; }
+        .modal-box { background: white; padding: 2rem; border-radius: 16px; width: 90%; max-width: 420px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); animation: slideUp 0.3s; }
+        @keyframes slideUp { from {transform: translateY(20px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
     </style>
 </head>
 <body>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <a href="index.php" class="btn-back"><i class="fas fa-arrow-left me-2"></i> Dashboard</a>
-        <div class="text-end">
-            <span class="badge bg-dark border border-secondary">AI SYSTEM V.2.0</span>
+    <header class="navbar">
+        <div class="container">
+            <h1 class="logo">📊 Pusat Laporan</h1>
+            <nav>
+                <a href="index.php" class="nav-link">Dashboard</a>
+                <a href="logout.php" class="nav-link btn-logout">Logout</a>
+            </nav>
         </div>
-    </div>
+    </header>
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="money-card">
-                <div class="money-label"><i class="fas fa-vault me-2"></i>Total Kekayaan Real (Aset)</div>
-                <div class="money-value">Rp <?= number_format($total_uang_real, 0, ',', '.') ?></div>
-                <div class="mt-3 d-flex gap-2">
-                    <span class="badge-money c-cyan"><i class="fas fa-cash-register me-1"></i> Laci: <?= number_format($saldo_laci_terkini/1000, 0) ?>k</span>
-                    <span class="badge-money c-purple"><i class="fas fa-university me-1"></i> Bank: <?= number_format($saldo_bank_terkini/1000, 0) ?>k</span>
-                </div>
-            </div>
-        </div>
+    <main class="container">
         
-        <div class="col-md-6">
-            <div class="money-card" style="background: linear-gradient(135deg, #064e3b 0%, #022c22 100%); border-color: var(--accent-green);">
-                <div class="money-label" style="color: #86efac;"><i class="fas fa-chart-line me-2"></i>Akumulasi Omzet</div>
-                <div class="money-value" style="color: #bef264;">Rp <?= number_format($total_omzet_all, 0, ',', '.') ?></div>
-                <div class="mt-3 text-white-50 small">
-                    Total nilai transaksi penjualan yang pernah tercatat.
-                </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="welcome-message" style="margin:0; text-align:left;">
+                <h2 style="margin-bottom:5px;">Laporan Kustom</h2>
+                <p style="color:#64748b;">Pantau data dari berbagai file JSON Anda di sini.</p>
             </div>
+            <button onclick="document.getElementById('modalAdd').style.display='flex'" class="btn-add">
+                + Tambah Laporan
+            </button>
         </div>
-    </div>
 
-    <div class="table-container">
-        <div class="p-4 border-bottom border-secondary">
-            <h5 class="m-0 fw-bold"><i class="fas fa-history me-2"></i>Log Riwayat Tutup Buku</h5>
-        </div>
-        <div class="table-responsive">
-            <table class="table-ai">
-                <thead>
-                    <tr>
-                        <th>Waktu</th>
-                        <th>Penjualan (Omzet)</th>
-                        <th>Posisi Saldo Akhir</th>
-                        <th>Total Aset</th>
-                        <th>Petugas</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (empty($riwayat)): ?>
-                        <tr><td colspan="5" class="text-center py-5 text-muted">Belum ada data.</td></tr>
-                    <?php else: ?>
-                        <?php foreach ($riwayat as $row): ?>
-                        <tr>
-                            <td>
-                                <div class="fw-bold text-white"><?= date('d M Y', strtotime($row['tanggal'])) ?></div>
-                                <small class="text-muted"><?= $row['waktu_tutup'] ?? '-' ?></small>
-                            </td>
+        <div class="widgets-container">
+            
+            <?php if (empty($myReports)): ?>
+                <div style="text-align:center; padding: 3rem; border: 2px dashed #e2e8f0; border-radius: 12px; color: #94a3b8;">
+                    <h3>Belum ada laporan.</h3>
+                    <p>Klik tombol <b>+ Tambah Laporan</b> untuk menampilkan data dari file JSON Anda.</p>
+                </div>
+            <?php else: ?>
+                
+                <?php foreach ($myReports as $index => $report): ?>
+                    <?php
+                    // Baca File JSON
+                    $sourceFile = $dataDir . $report['source'];
+                    $dataKonten = file_exists($sourceFile) ? json_decode(file_get_contents($sourceFile), true) : [];
+                    ?>
+                    
+                    <div class="report-card">
+                        <div class="report-header">
+                            <div class="report-title">
+                                <span><?= htmlspecialchars($report['name']) ?></span>
+                                <span class="file-badge">📂 <?= htmlspecialchars($report['source']) ?></span>
+                            </div>
                             
-                            <td>
-                                <div style="color: var(--accent-green); font-weight: bold; font-size: 1.1rem;">
-                                    + Rp <?= number_format($row['omzet_hari_ini'] ?? 0, 0, ',', '.') ?>
-                                </div>
-                                <small class="text-muted" style="font-size: 0.7rem;">TRANSAKSI HARI INI</small>
-                            </td>
+                            <form method="POST" onsubmit="return confirm('Hapus laporan ini dari tampilan?');">
+                                <input type="hidden" name="action" value="hapus_widget">
+                                <input type="hidden" name="index" value="<?= $index ?>">
+                                <button type="submit" class="btn-delete" title="Hapus Laporan">🗑</button>
+                            </form>
+                        </div>
 
-                            <td>
-                                <div class="d-flex flex-column gap-1">
-                                    <div class="badge-money c-cyan" style="width: fit-content;">
-                                        Laci: Rp <?= number_format($row['saldo_laci'] ?? 0, 0, ',', '.') ?>
-                                    </div>
-                                    <?php if(($row['saldo_bank'] ?? 0) > 0): ?>
-                                    <div class="badge-money c-purple" style="width: fit-content;">
-                                        Bank: Rp <?= number_format($row['saldo_bank'] ?? 0, 0, ',', '.') ?>
-                                    </div>
+                        <div style="overflow-x:auto;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <?php 
+                                        // Header Otomatis dari Key JSON
+                                        if (!empty($dataKonten) && is_array($dataKonten)) {
+                                            $firstItem = reset($dataKonten);
+                                            if (is_array($firstItem)) {
+                                                foreach (array_keys($firstItem) as $key) {
+                                                    // Ubah 'nama_barang' jadi 'NAMA BARANG'
+                                                    echo "<th>" . strtoupper(str_replace('_', ' ', $key)) . "</th>";
+                                                }
+                                            } else {
+                                                echo "<th>DATA</th>";
+                                            }
+                                        } else {
+                                            echo "<th>STATUS</th>";
+                                        }
+                                        ?>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (empty($dataKonten) || !is_array($dataKonten)): ?>
+                                        <tr><td colspan="100%" style="text-align:center; color:#94a3b8; padding:2rem;">File JSON kosong atau tidak valid.</td></tr>
+                                    <?php else: ?>
+                                        <?php foreach ($dataKonten as $row): ?>
+                                            <tr>
+                                                <?php if (is_array($row)): ?>
+                                                    <?php foreach ($row as $cell): ?>
+                                                        <td>
+                                                            <?php 
+                                                            if(is_array($cell)) {
+                                                                echo '<span style="color:#ccc; font-size:0.8em;">[Array]</span>';
+                                                            } elseif (is_numeric($cell) && $cell > 1000) {
+                                                                echo number_format($cell, 0, ',', '.');
+                                                            } else {
+                                                                echo htmlspecialchars($cell);
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                    <?php endforeach; ?>
+                                                <?php else: ?>
+                                                    <td><?= htmlspecialchars($row) ?></td>
+                                                <?php endif; ?>
+                                            </tr>
+                                        <?php endforeach; ?>
                                     <?php endif; ?>
-                                </div>
-                            </td>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
 
-                            <td class="fw-bold fs-5">
-                                Rp <?= number_format($row['total_aset'] ?? 0, 0, ',', '.') ?>
-                            </td>
+            <?php endif; ?>
 
-                            <td>
-                                <span class="badge bg-secondary text-dark fw-bold"><?= $row['petugas'] ?? 'SYS' ?></span>
-                            </td>
-                        </tr>
+        </div>
+
+    </main>
+
+    <div id="modalAdd" class="modal-overlay">
+        <div class="modal-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                <h2 style="margin:0; color:#1e293b;">Tambah Laporan</h2>
+                <span onclick="document.getElementById('modalAdd').style.display='none'" style="cursor:pointer; font-size:1.5rem;">×</span>
+            </div>
+            
+            <form method="POST">
+                <input type="hidden" name="action" value="tambah_widget">
+                
+                <div style="margin-bottom:1rem;">
+                    <label style="display:block; font-weight:600; color:#475569; margin-bottom:5px;">Judul Laporan</label>
+                    <input type="text" name="nama_laporan" required placeholder="Contoh: Stok Gudang Utama" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px;">
+                </div>
+
+                <div style="margin-bottom:1.5rem;">
+                    <label style="display:block; font-weight:600; color:#475569; margin-bottom:5px;">Pilih Data (JSON)</label>
+                    <select name="sumber_json" required style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; background:white;">
+                        <option value="" disabled selected>-- Pilih File JSON --</option>
+                        <?php foreach ($jsonFiles as $file): ?>
+                            <option value="<?= $file ?>">📂 <?= $file ?></option>
                         <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+                    </select>
+                    <small style="color:#64748b;">*Mengambil data dari folder <code>/data/</code></small>
+                </div>
+
+                <button type="submit" class="btn-add" style="width:100%; background:#2563eb;">Simpan & Tampilkan</button>
+            </form>
         </div>
     </div>
+
+    <script>
+        // Tutup modal jika klik di luar
+        window.onclick = (e) => {
+            if(e.target == document.getElementById('modalAdd')) {
+                document.getElementById('modalAdd').style.display = 'none';
+            }
+        }
+    </script>
 
 </body>
 </html>

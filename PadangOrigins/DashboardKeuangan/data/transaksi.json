@@ -1,21 +1,32 @@
 [
     {
-        "id": "order_69243a5ce8a6c",
-        "tanggal": "2025-11-24 10:58:36",
-        "tipe": "pendapatan",
-        "status": "Diterima",
-        "jumlah": 125000,
-        "akun_sumber": "Customer",
-        "akun_tujuan": "BCA",
-        "deskripsi": "Order (ilham): 5x Gulai Cincang",
-        "pelaku": "System",
-        "items": [
-            {
-                "name": "Gulai Cincang",
-                "price": 25000,
-                "qty": 5
-            }
-        ],
-        "customer_name": "ilham"
+        "id": "SALARY-6924aed5dbad0",
+        "tanggal": "2025-11-25 02:15:33",
+        "tipe": "pengeluaran",
+        "akun_sumber": "BCA",
+        "akun_tujuan": "Karyawan: william eka putra supriadi",
+        "jumlah": 500,
+        "deskripsi": "Gaji Bulanan: william eka putra supriadi",
+        "pelaku": "admin"
+    },
+    {
+        "id": "SAL-6924b143728f5",
+        "tanggal": "2025-11-25 02:25:55",
+        "tipe": "pengeluaran",
+        "akun_sumber": "BCA",
+        "akun_tujuan": "Karyawan: william eka putra supriadi",
+        "jumlah": 500,
+        "deskripsi": "Gaji Bulanan: william eka putra supriadi",
+        "pelaku": "admin"
+    },
+    {
+        "id": "WD-6924b41107e25",
+        "tanggal": "2025-11-25 02:37:53",
+        "tipe": "pengeluaran",
+        "akun_sumber": "BCA",
+        "akun_tujuan": "Karyawan: william eka putra supriadi",
+        "jumlah": 500,
+        "deskripsi": "Withdraw Saldo Karyawan",
+        "pelaku": "william eka putra supriadi"
     }
 ]

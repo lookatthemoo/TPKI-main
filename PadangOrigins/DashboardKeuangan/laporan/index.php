@@ -13,7 +13,7 @@ $rekeningList = file_exists($fileRekening) ? json_decode(file_get_contents($file
 // --- 2. HITUNG SALDO PER KAS & BANK ---
 $kasLaci = 0;
 $kasOps = 0;
-$omzetHariIni = 0;
+$omzetHariIni = 0; // Variabel ada tapi dibiarkan 0 (Dummy)
 $pengeluaranHariIni = 0;
 $hariIni = date('Y-m-d');
 
@@ -26,21 +26,29 @@ foreach ($historiLaporan as $lap) {
     }
 }
 
+// Inisialisasi saldo bank
 $saldoPerBank = [];
 foreach ($rekeningList as $rek) {
     $saldoPerBank[$rek['nama_bank']] = (int)$rek['saldo']; 
 }
 
+// --- LOGIKA PERHITUNGAN ---
 foreach ($trxData as $t) {
     $jumlah = (int)$t['jumlah'];
     $tipe = $t['tipe'];
     $akunSumber = $t['akun_sumber'] ?? 'kas_laci'; 
-    $akunTujuan = $t['akun_tujuan'] ?? '';
+    $akunTujuan = $t['akun_tujuan'] ?? 'kas_laci'; 
 
+    // 1. Logika Pendapatan
     if ($tipe === 'pendapatan') {
-        $kasLaci += $jumlah;
-        if (substr($t['tanggal'], 0, 10) === $hariIni) $omzetHariIni += $jumlah;
+        // Hanya tambah ke Kas Laci jika tujuannya 'kas_laci'
+        if ($akunTujuan === 'kas_laci') {
+            $kasLaci += $jumlah;
+        }
+        // LOGIKA OMZET SUDAH DIHAPUS TOTAL DI SINI
     } 
+    
+    // 2. Logika Pengeluaran / Penarikan
     elseif ($tipe === 'pengeluaran' || $tipe === 'penarikan') {
         if ($akunSumber === 'kas_laci') $kasLaci -= $jumlah;
         elseif ($akunSumber === 'kas_ops') $kasOps -= $jumlah;
@@ -48,6 +56,8 @@ foreach ($trxData as $t) {
         
         if (substr($t['tanggal'], 0, 10) === $hariIni && $tipe === 'pengeluaran') $pengeluaranHariIni += $jumlah;
     }
+    
+    // 3. Logika Transfer
     elseif ($tipe === 'transfer') {
         if ($akunSumber === 'kas_laci') $kasLaci -= $jumlah;
         elseif ($akunSumber === 'kas_ops') $kasOps -= $jumlah;
@@ -75,56 +85,28 @@ $totalAset = $kasLaci + $kasOps + $totalSaldoBank;
         
         .header-summary {
             background: linear-gradient(135deg, #2c3e50, #34495e);
-            color: white;
-            padding: 1.2rem 2rem;
-            border-radius: 12px;
-            margin-top: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            color: white; padding: 1.2rem 2rem; border-radius: 12px;
+            margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;
             box-shadow: 0 4px 15px rgba(44, 62, 80, 0.2);
         }
         .header-title h2 { font-size: 0.9rem; font-weight: 500; opacity: 0.9; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 1px; }
         .header-amount { font-size: 1.8rem; font-weight: 700; }
         
-        /* Tombol Tutup Buku Dinamis */
         .btn-tutup-buku {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: transform 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            background: #e74c3c; color: white; border: none; padding: 10px 20px;
+            border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer;
+            transition: transform 0.2s; display: flex; align-items: center; gap: 8px;
             box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
         }
         .btn-tutup-buku:hover { background: #c0392b; transform: translateY(-2px); }
         
-        /* Tombol Disabled (Sudah Tutup) */
         .btn-disabled-tutup {
-            background: #27ae60; /* Hijau sukses */
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: default;
-            opacity: 0.9;
-            box-shadow: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            background: #27ae60; color: white; border: none; padding: 10px 20px;
+            border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: default;
+            opacity: 0.9; display: flex; align-items: center; gap: 8px;
         }
 
-        /* Grid Kartu */
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
-        
         .balance-card { 
             background: white; padding: 1.2rem; border-radius: 12px; 
             box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #f1f1f1; 
@@ -144,33 +126,22 @@ $totalAset = $kasLaci + $kasOps + $totalSaldoBank;
         }
         .btn-mini:hover { opacity: 0.9; }
         
-        .bg-purple { background: #9b59b6; } 
-        .bg-dark { background: #34495e; }
-        .bg-blue { background: #3498db; }
-        .bg-orange { background: #e67e22; }
+        .bg-purple { background: #9b59b6; } .bg-dark { background: #34495e; }
+        .bg-blue { background: #3498db; } .bg-orange { background: #e67e22; }
 
-        .bank-list { 
-            margin-bottom: 12px; border-top: 1px dashed #eee; padding-top: 8px; 
-            max-height: 150px; overflow-y: auto; 
-        }
-        .bank-item { 
-            display: flex; justify-content: space-between; padding: 5px 0; 
-            font-size: 0.85rem; border-bottom: 1px solid #f9f9f9; 
-        }
+        .bank-list { margin-bottom: 12px; border-top: 1px dashed #eee; padding-top: 8px; max-height: 150px; overflow-y: auto; }
+        .bank-item { display: flex; justify-content: space-between; padding: 5px 0; font-size: 0.85rem; border-bottom: 1px solid #f9f9f9; }
         .bank-name { font-weight: 500; color: #555; display: flex; align-items: center; gap: 6px; }
         .bank-saldo { font-weight: 700; color: #3498db; }
         .bank-badge { font-size: 0.65rem; padding: 1px 5px; border-radius: 3px; color: white; font-weight: 600; }
         .badge-bank { background: #34495e; } .badge-ewallet { background: #1abc9c; }
 
-        .section-header { 
-            margin-top: 2rem; margin-bottom: 0.8rem; display: flex; align-items: center; 
-            gap: 10px; font-size: 1.1rem; font-weight: 600; color: #2c3e50;
-        }
+        .section-header { margin-top: 2rem; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 600; color: #2c3e50; }
         
         .table-wrapper { overflow-x: auto; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
         .table-custom { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         .table-custom th { background: #f8f9fa; padding: 10px 15px; text-align: left; color: #666; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
-        .table-custom td { padding: 10px 15px; border-bottom: 1px solid #f1f1f1; color: #444; }
+        .table-custom td { padding: 10px 15px; border-bottom: 1px solid #f1f1f1; color: #444; vertical-align: top; }
         
         .badge-tipe { padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; display: inline-block; }
         .tipe-masuk { background: #e6f9ed; color: #2ecc71; }
@@ -306,13 +277,12 @@ $totalAset = $kasLaci + $kasOps + $totalSaldoBank;
             <table class="table-custom">
                 <thead>
                     <tr style="background:#2c3e50; color:white;">
-                        <th style="color:white;">Tanggal</th>
-                        <th style="color:white;">Waktu</th>
-                        <th style="color:white;">Kas Laci</th>
-                        <th style="color:white;">Kas Ops</th>
-                        <th style="color:white;">Bank</th>
-                        <th style="color:white;">Omzet</th>
-                        <th style="color:white;">Petugas</th>
+                        <th style="color:grey;">Tanggal</th>
+                        <th style="color:grey;">Waktu</th>
+                        <th style="color:grey;">Kas Laci</th>
+                        <th style="color:grey;">Kas Ops</th>
+                        <th style="color:grey;">Rekening & E-Wallet</th>
+                        <th style="color:grey;">Petugas</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -322,8 +292,25 @@ $totalAset = $kasLaci + $kasOps + $totalSaldoBank;
                         <td><?php echo $lap['waktu_tutup']; ?></td>
                         <td>Rp <?php echo number_format($lap['saldo_laci'], 0, ',', '.'); ?></td>
                         <td>Rp <?php echo number_format($lap['saldo_ops'], 0, ',', '.'); ?></td>
-                        <td>Rp <?php echo number_format($lap['saldo_bank'], 0, ',', '.'); ?></td>
-                        <td style="color:#2ecc71; font-weight:bold;">Rp <?php echo number_format($lap['omzet_hari_ini'], 0, ',', '.'); ?></td>
+                        <td>
+                            <?php 
+                            if (isset($lap['rincian_bank']) && is_array($lap['rincian_bank'])) {
+                                echo "<ul style='margin:0; padding-left:0; list-style:none;'>";
+                                foreach($lap['rincian_bank'] as $nmBank => $jml) {
+                                    if($jml > 0) {
+                                        echo "<li style='font-size:0.8rem; border-bottom:1px dashed #eee; padding:2px 0;'>
+                                                <span style='color:#555;'>$nmBank:</span> 
+                                                <b style='color:#2980b9;'>".number_format($jml,0,',','.')."</b>
+                                              </li>";
+                                    }
+                                }
+                                echo "</ul>";
+                                echo "<div style='margin-top:4px; font-size:0.8rem; font-weight:bold; color:#333; border-top:1px solid #ddd;'>Total: ".number_format($lap['saldo_bank'],0,',','.')."</div>";
+                            } else {
+                                echo "Rp " . number_format($lap['saldo_bank'], 0, ',', '.');
+                            }
+                            ?>
+                        </td>
                         <td><?php echo $lap['petugas']; ?></td>
                     </tr>
                     <?php endforeach; ?>
@@ -415,8 +402,8 @@ $totalAset = $kasLaci + $kasOps + $totalSaldoBank;
                 <input type="hidden" name="saldo_laci" value="<?php echo $kasLaci; ?>">
                 <input type="hidden" name="saldo_ops" value="<?php echo $kasOps; ?>">
                 <input type="hidden" name="saldo_bank" value="<?php echo $totalSaldoBank; ?>">
+                <input type="hidden" name="rincian_bank" value="<?php echo htmlspecialchars(json_encode($saldoPerBank)); ?>">
                 <input type="hidden" name="total_aset" value="<?php echo $totalAset; ?>">
-                <input type="hidden" name="omzet" value="<?php echo $omzetHariIni; ?>">
                 <button type="submit" class="btn-submit-wd" style="background:#27ae60; width:100%; padding:12px; color:white; font-weight:bold; border:none; border-radius:6px; cursor:pointer;">✅ Ya, Tutup Buku</button>
             </form>
         </div>

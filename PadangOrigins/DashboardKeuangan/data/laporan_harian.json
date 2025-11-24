@@ -1,12 +1,21 @@
 [
     {
-        "tanggal": "2025-11-24",
-        "waktu_tutup": "17:43:21",
-        "saldo_laci": 17410000,
-        "saldo_ops": 10000000,
-        "saldo_bank": 200000,
-        "total_aset": 27610000,
-        "omzet_hari_ini": 2610000,
+        "tanggal": "2025-11-25",
+        "waktu_tutup": "02:06:29",
+        "saldo_laci": 0,
+        "saldo_ops": 0,
+        "saldo_bank": 25000,
+        "rincian_bank": {
+            "BCA": 25000,
+            "Mandiri": 0,
+            "BRI": 0,
+            "BNI": 0,
+            "SeaBank": 0,
+            "GoPay": 0,
+            "OVO": 0,
+            "DANA": 0
+        },
+        "total_aset": 25000,
         "petugas": "admin"
     }
 ]

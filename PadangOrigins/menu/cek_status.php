@@ -2,6 +2,13 @@
 session_start();
 header('Content-Type: application/json');
 
+// [BARU] Fitur untuk reset session agar bisa pesan lagi manual
+if (isset($_GET['action']) && $_GET['action'] === 'clear') {
+    unset($_SESSION['current_order_id']);
+    echo json_encode(['status' => 'Session Cleared']);
+    exit;
+}
+
 // Cek apakah pelanggan punya session order_id
 if (!isset($_SESSION['current_order_id'])) {
     echo json_encode(['status' => 'Belum ada pesanan']);

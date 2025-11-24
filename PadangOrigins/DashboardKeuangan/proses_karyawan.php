@@ -1,139 +1,49 @@
 <?php
-// === PENGATURAN AWAL ===
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-require_once 'auth_check.php';
-
-$fileKaryawan = 'data/karyawan.json';
-$fileTransaksi = 'data/transaksi.json';
-
-// --- FUNGSI BANTUAN ---
-function getJson($file) {
-    if (!file_exists($file)) return [];
-    $data = json_decode(file_get_contents($file), true);
-    return is_array($data) ? $data : [];
+session_start();
+// Cek Sesi Login
+if (!isset($_SESSION['kry_id'])) { 
+    header('Location: login.php'); 
+    exit; 
 }
 
-function saveJson($file, $data) {
-    file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), LOCK_EX);
-}
+// Set Timezone
+date_default_timezone_set('Asia/Jakarta');
+$hariIni = date('Y-m-d');
+$idKaryawan = $_SESSION['kry_id'];
 
-// --- LOGIKA UTAMA ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'] ?? '';
+// Path Database
+$fileKaryawan = '../data/karyawan.json';
 
-    if (empty($action)) {
-        die("Error Sistem: Tidak ada 'action' yang diterima.");
-    }
+// Baca Data
+$karyawanData = file_exists($fileKaryawan) ? json_decode(file_get_contents($fileKaryawan), true) : [];
+$updated = false;
 
-    $karyawanData = getJson($fileKaryawan);
-
-    // 1. TAMBAH KARYAWAN (AUTO USERNAME & PASSWORD)
-    if ($action === 'add_employee') {
-        $nama = trim($_POST['nama']);
+foreach ($karyawanData as &$k) {
+    if ($k['id'] === $idKaryawan) {
         
-        // Bikin Username: Huruf kecil semua & buang spasi
-        // Contoh: "Asep Surasep" jadi "asepsurasep"
-        $usernameAuto = strtolower(str_replace(' ', '', $nama));
+        // VALIDASI GANDA: Cek apakah sudah absen hari ini?
+        if (($k['terakhir_absen'] ?? '') === $hariIni) {
+            // Jika sudah, jangan update apa-apa, langsung balik
+            header('Location: index.php?status=already_absen'); 
+            exit;
+        }
+
+        // LOGIKA UTAMA: Tambah Kehadiran
+        $k['hadir'] = ($k['hadir'] ?? 0) + 1;
         
-        // Password Default
-        $passwordDefault = "123";
-
-        $newEmp = [
-            'id' => 'KRY-' . time(),
-            'nama' => $nama,
-            'posisi' => $_POST['posisi'],
-            'username' => $usernameAuto, // Otomatis
-            'password' => $passwordDefault, // Otomatis
-            'gaji_pokok' => (int)$_POST['gaji'],
-            'saldo_gaji' => 0, 'saldo_bonus' => 0, 'bonus_pending' => 0,
-            'hadir' => 0, 'izin' => 0, 'performa' => 'Baik',
-            'terakhir_gaji' => '-', 'terakhir_absen' => ''
-        ];
+        // Simpan tanggal hari ini sebagai 'terakhir_absen'
+        $k['terakhir_absen'] = $hariIni;
         
-        $karyawanData[] = $newEmp;
-        saveJson($fileKaryawan, $karyawanData);
-        header('Location: gaji.php?status=added'); exit;
-    }
-
-    // 2. UPDATE DATA
-    if ($action === 'update_data') {
-        $id = $_POST['id'];
-        foreach ($karyawanData as &$k) {
-            if ($k['id'] === $id) {
-                if(isset($_POST['hadir'])) $k['hadir'] = (int)$_POST['hadir'];
-                if(isset($_POST['izin'])) $k['izin'] = (int)$_POST['izin'];
-                if(isset($_POST['performa'])) $k['performa'] = $_POST['performa'];
-                
-                if(isset($_POST['tambah_bonus']) && $_POST['tambah_bonus'] > 0) {
-                    $k['bonus_pending'] = ($k['bonus_pending'] ?? 0) + (int)$_POST['tambah_bonus'];
-                }
-                break;
-            }
-        }
-        saveJson($fileKaryawan, $karyawanData);
-        header('Location: gaji.php?tab=karyawan'); exit;
-    }
-
-    // 3. CAIRKAN BONUS
-    if ($action === 'pay_bonus') {
-        $id = $_POST['id'];
-        $amount = (int)$_POST['amount'];
-        foreach ($karyawanData as &$k) {
-            if ($k['id'] === $id) {
-                $k['saldo_bonus'] = ($k['saldo_bonus'] ?? 0) + $amount;
-                $k['bonus_pending'] = 0;
-                break;
-            }
-        }
-        saveJson($fileKaryawan, $karyawanData);
-        header('Location: gaji.php?tab=karyawan&status=bonus_ready'); exit;
-    }
-
-    // 4. KIRIM GAJI
-    if ($action === 'pay_salary') {
-        $id = $_POST['id'];
-        $nama = $_POST['nama'];
-        $amount = (int)$_POST['amount'];
-
-        $trxData = getJson($fileTransaksi);
-        $trxData[] = [
-            'id' => 'PAY-' . time(),
-            'tanggal' => date('Y-m-d H:i:s'),
-            'tipe' => 'pengeluaran',
-            'jumlah' => $amount,
-            'deskripsi' => "Gaji Bulanan: $nama",
-            'pelaku' => $_SESSION['admin_username'] ?? 'Admin'
-        ];
-        saveJson($fileTransaksi, $trxData);
-
-        foreach ($karyawanData as &$k) {
-            if ($k['id'] === $id) {
-                $k['saldo_gaji'] = ($k['saldo_gaji'] ?? 0) + $amount;
-                $k['terakhir_gaji'] = date('d M Y');
-                break;
-            }
-        }
-        saveJson($fileKaryawan, $karyawanData);
-        header('Location: gaji.php?tab=gaji&status=salary_ready'); exit;
-    }
-
-    // 5. PECAT KARYAWAN
-    if ($action === 'delete_employee') {
-        $id = $_POST['id'];
-        $newData = [];
-        foreach ($karyawanData as $k) {
-            if ($k['id'] !== $id) {
-                $newData[] = $k;
-            }
-        }
-        saveJson($fileKaryawan, $newData);
-        header('Location: gaji.php?status=deleted'); exit;
+        $updated = true;
+        break;
     }
 }
 
-header('Location: gaji.php');
-exit;
+if ($updated) {
+    // Simpan kembali ke JSON
+    file_put_contents($fileKaryawan, json_encode($karyawanData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    header('Location: index.php?status=success');
+} else {
+    header('Location: index.php?status=error');
+}
 ?>

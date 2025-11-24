@@ -86,18 +86,19 @@ $totalMenu = count($menuList);
             </div>
 
             <div class="nav-card">
+                <span class="status-badge" style="background:#e0e7ff; color:#4338ca;">WALLET</span>
+                <div class="card-icon" style="color: #4338ca; background: #e0e7ff;">💳</div>
+                <h3>Rekening & E-Wallet</h3>
+                <p>Cek Saldo BCA, BRI, Mandiri, E-Wallet, dll.</p>
+                <a href="rekening/" class="card-btn" style="background: #4338ca; color: white; box-shadow: 0 4px 15px rgba(67, 56, 202, 0.3);">Kelola Saldo ➔</a>
+            </div>
+
+            <div class="nav-card">
                 <span class="status-badge" style="background:#e3f2fd; color:#1565c0;">HRD</span>
                 <div class="card-icon" style="color:#673ab7;">👥</div>
                 <h3>Gaji & Karyawan</h3>
                 <p>Manajemen tim, absensi, dan penggajian.</p>
                 <a href="gaji.php" class="card-btn" style="background:#673ab7; color:white;">Kelola Tim ➔</a>
-            </div>
-
-            <div class="nav-card">
-                <div class="card-icon" style="color: #e74c3c; background: #fff5f5;">📝</div>
-                <h3>Catat Pengeluaran</h3>
-                <p>Input biaya operasional dadakan.</p>
-                <button onclick="bukaModalExp()" class="card-btn btn-red">Input Data +</button>
             </div>
 
             <div class="nav-card">
@@ -110,17 +111,6 @@ $totalMenu = count($menuList);
         </section>
 
     </main>
-
-    <div id="modalExp" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header"><h2>📤 Catat Pengeluaran</h2><span class="close-modal" onclick="tutupModalExp()">×</span></div>
-            <form action="tambah_pengeluaran.php" method="POST">
-                <div class="modal-form-group"><label>Jumlah (Rp) *</label><input type="number" name="amount" required min="1"></div>
-                <div class="modal-form-group"><label>Keperluan *</label><input type="text" name="deskripsi" required></div>
-                <button type="submit" class="btn-submit-wd">Simpan Data</button>
-            </form>
-        </div>
-    </div>
 
     <div id="modalMenu" class="modal-overlay">
         <div class="modal-content">
@@ -137,10 +127,6 @@ $totalMenu = count($menuList);
     </div>
 
     <script>
-        const mE = document.getElementById('modalExp');
-        function bukaModalExp() { mE.style.display = "flex"; }
-        function tutupModalExp() { mE.style.display = "none"; }
-
         const mM = document.getElementById('modalMenu');
         function bukaModalMenu() { mM.style.display = "flex"; }
         function tutupModalMenu() { mM.style.display = "none"; }
@@ -152,7 +138,6 @@ $totalMenu = count($menuList);
         }
 
         window.onclick = (e) => { 
-            if(e.target == mE) mE.style.display = "none";
             if(e.target == mM) mM.style.display = "none";
         }
     </script>

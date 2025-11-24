@@ -5,7 +5,7 @@ date_default_timezone_set('Asia/Jakarta');
 // --- 1. SETUP DATA ---
 $fileTrx = '../data/transaksi.json';
 $fileLaporan = '../data/laporan_harian.json';
-$fileRekening = '../data/rekening.json'; // Tambahan untuk reset bank
+$fileRekening = '../data/rekening.json'; 
 
 function getJson($file) {
     return file_exists($file) ? json_decode(file_get_contents($file), true) : [];
@@ -15,7 +15,7 @@ function saveJson($file, $data) {
     file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), LOCK_EX);
 }
 
-// --- FUNGSI HITUNG SALDO TERKINI (Untuk Validasi) ---
+// --- FUNGSI HITUNG SALDO TERKINI ---
 function hitungSaldoSaatIni($akunTarget) {
     global $fileTrx, $fileRekening;
     $trxData = getJson($fileTrx);
@@ -66,10 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $catatan = $_POST['catatan'];
 
         $saldoSumber = hitungSaldoSaatIni($sumber);
-        if ($saldoSumber < $jumlah) {
-            header("Location: index.php?error=saldo_kurang&sumber=$sumber"); exit;
-        }
-
+        
         $trxData[] = [
             'id' => $idTrx,
             'tanggal' => $tanggal,
@@ -91,11 +88,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sumber = $_POST['sumber']; 
         $deskripsi = $_POST['deskripsi'];
 
-        $saldoSumber = hitungSaldoSaatIni($sumber);
-        if ($saldoSumber < $jumlah) {
-            header("Location: index.php?error=saldo_kurang&sumber=$sumber"); exit;
-        }
-
         $trxData[] = [
             'id' => $idTrx,
             'tanggal' => $tanggal,
@@ -116,11 +108,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sumber = $_POST['sumber'];
         $catatan = $_POST['catatan'];
 
-        $saldoSumber = hitungSaldoSaatIni($sumber);
-        if ($saldoSumber < $jumlah) {
-            header("Location: index.php?error=saldo_kurang&sumber=$sumber"); exit;
-        }
-
         $trxData[] = [
             'id' => 'PRIVE-' . time(),
             'tanggal' => $tanggal,
@@ -137,23 +124,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: index.php?status=success_prive'); exit;
     }
 
-    // --- 5. TUTUP BUKU HARIAN & RESET KE 0 ---
+    // --- 5. TUTUP BUKU HARIAN (FIXED: SALDO BANK AMAN) ---
     if ($action === 'tutup_buku') {
         $laporanData = getJson($fileLaporan);
         
+        $rincianBank = isset($_POST['rincian_bank']) ? json_decode($_POST['rincian_bank'], true) : [];
+
         // A. Simpan Data Terakhir ke Riwayat (Snapshot)
         $snapshot = [
             'tanggal' => date('Y-m-d'),
             'waktu_tutup' => date('H:i:s'),
             'saldo_laci' => (int)$_POST['saldo_laci'],
             'saldo_ops' => (int)$_POST['saldo_ops'],
-            'saldo_bank' => (int)$_POST['saldo_bank'],
+            'saldo_bank' => (int)$_POST['saldo_bank'], 
+            'rincian_bank' => $rincianBank,           
             'total_aset' => (int)$_POST['total_aset'],
-            'omzet_hari_ini' => (int)$_POST['omzet'],
             'petugas' => $user
         ];
 
-        // Update jika hari ini sudah ada, atau tambah baru
         $found = false;
         foreach($laporanData as &$lap) {
             if($lap['tanggal'] === date('Y-m-d')) {
@@ -164,17 +152,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if(!$found) $laporanData[] = $snapshot;
         saveJson($fileLaporan, $laporanData); // Simpan Laporan
 
-        // B. RESET SEMUA TRANSAKSI JADI KOSONG
-        // Ini akan membuat Mutasi Hari Ini jadi kosong
+        // B. RESET SEMUA TRANSAKSI JADI KOSONG (Agar mutasi hari esok mulai dari 0)
         saveJson($fileTrx, []); 
 
-        // C. RESET SEMUA SALDO BANK JADI 0
-        // Ini akan membuat kartu Rekening Bank jadi Rp 0
-        $rekeningData = getJson($fileRekening);
-        foreach($rekeningData as &$rek) {
-            $rek['saldo'] = 0;
-        }
-        saveJson($fileRekening, $rekeningData);
+        // [FIX] Bagian Reset Saldo Bank DIHAPUS TOTAL.
+        // Saldo di rekening.json tidak akan diganggu gugat.
 
         header('Location: index.php?status=success_close'); exit;
     }

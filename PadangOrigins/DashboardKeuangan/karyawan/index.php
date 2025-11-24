@@ -1,343 +1,257 @@
 <?php
-require_once '../auth_check.php';
+session_start();
 
-// --- 1. LOAD DATA ---
-$fileTrx = '../data/transaksi.json';
-$fileLaporan = '../data/laporan_harian.json';
-$trxData = file_exists($fileTrx) ? json_decode(file_get_contents($fileTrx), true) : [];
-$historiLaporan = file_exists($fileLaporan) ? json_decode(file_get_contents($fileLaporan), true) : [];
+// 1. Cek Sesi Login
+if (!isset($_SESSION['kry_id'])) {
+    header("Location: login.php");
+    exit;
+}
 
-// --- 2. HITUNG SALDO PER KAS ---
-// Default Saldo Awal (Bisa diset manual di sini atau biarkan 0 dan tambah via pemasukan)
-$kasLaci = 0;
-$kasOps = 0;
-$kasBank = 0;
+$idKaryawan = $_SESSION['kry_id'];
+$fileKaryawan = '../data/karyawan.json';
 
-$omzetHariIni = 0;
-$pengeluaranHariIni = 0;
-$hariIni = date('Y-m-d');
-
-foreach ($trxData as $t) {
-    $jumlah = (int)$t['jumlah'];
-    $tipe = $t['tipe'];
-    
-    // Default akun jika data lama (Legacy Support)
-    $akunSumber = $t['akun_sumber'] ?? 'kas_laci'; 
-    $akunTujuan = $t['akun_tujuan'] ?? '';
-
-    // A. LOGIKA SALDO UTAMA
-    if ($tipe === 'pendapatan') {
-        // Pendapatan default masuk Kas Laci
-        $kasLaci += $jumlah;
-        
-        if (substr($t['tanggal'], 0, 10) === $hariIni) $omzetHariIni += $jumlah;
-    } 
-    elseif ($tipe === 'pengeluaran' || $tipe === 'penarikan') {
-        // Kurangi dari akun sumber yang sesuai
-        if ($akunSumber === 'kas_laci') $kasLaci -= $jumlah;
-        elseif ($akunSumber === 'kas_ops') $kasOps -= $jumlah;
-        elseif ($akunSumber === 'bank') $kasBank -= $jumlah;
-        
-        if (substr($t['tanggal'], 0, 10) === $hariIni && $tipe === 'pengeluaran') $pengeluaranHariIni += $jumlah;
-    }
-    elseif ($tipe === 'transfer') {
-        // Pindah Uang: Kurangi Sumber, Tambah Tujuan
-        if ($akunSumber === 'kas_laci') $kasLaci -= $jumlah;
-        elseif ($akunSumber === 'kas_ops') $kasOps -= $jumlah;
-        elseif ($akunSumber === 'bank') $kasBank -= $jumlah;
-
-        if ($akunTujuan === 'kas_laci') $kasLaci += $jumlah;
-        elseif ($akunTujuan === 'kas_ops') $kasOps += $jumlah;
-        elseif ($akunTujuan === 'bank') $kasBank += $jumlah;
+// 2. Ambil Data Karyawan
+$me = null;
+if (file_exists($fileKaryawan)) {
+    $karyawanData = json_decode(file_get_contents($fileKaryawan), true) ?? [];
+    foreach ($karyawanData as $k) {
+        if ($k['id'] === $idKaryawan) {
+            $me = $k;
+            break;
+        }
     }
 }
 
-$totalAset = $kasLaci + $kasOps + $kasBank;
+if (!$me) {
+    session_destroy();
+    die("Data karyawan tidak ditemukan. Silakan login ulang.");
+}
+
+// Sapaan Waktu
+$jam = date('H');
+$sapaan = ($jam < 11) ? "Selamat Pagi" : (($jam < 15) ? "Selamat Siang" : (($jam < 19) ? "Selamat Sore" : "Selamat Malam"));
+
+// Warna & Icon Performa
+$performaColor = ($me['performa'] ?? 'Baik') === 'Baik' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+$performaIcon = ($me['performa'] ?? 'Baik') === 'Baik' ? 'fa-thumbs-up' : 'fa-thumbs-down';
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Keuangan Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Karyawan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* --- CUSTOM STYLE HALAMAN INI --- */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-        .balance-card { background: white; padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; position: relative; overflow: hidden; }
-        .balance-card h4 { color: #888; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
-        .balance-value { font-size: 2rem; font-weight: 800; color: #333; margin-bottom: 15px; }
-        
-        /* Warna Aksen Kartu */
-        .card-laci { border-left: 5px solid #2ecc71; }
-        .card-ops { border-left: 5px solid #f39c12; }
-        .card-bank { border-left: 5px solid #3498db; }
+        /* RESET & BASE */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #f0f2f5; color: #1f2937; }
 
-        .btn-mini { padding: 5px 12px; font-size: 0.8rem; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; color: white; margin-right: 5px; }
-        .bg-purple { background: #9b59b6; }
-        .bg-dark { background: #34495e; }
+        /* NAVBAR */
+        .navbar {
+            background: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 100;
+        }
+        .logo { font-size: 1.2rem; font-weight: 700; color: #2563eb; display: flex; align-items: center; gap: 8px; }
+        .btn-logout { 
+            background: #fee2e2; color: #ef4444; text-decoration: none; padding: 8px 16px; border-radius: 50px; 
+            font-size: 0.9rem; font-weight: 600; transition: 0.2s; border: 1px solid #fecaca;
+        }
+        .btn-logout:hover { background: #ef4444; color: white; }
 
-        .section-title { margin-top: 3rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
-        
-        /* Tabel Custom */
-        .table-custom { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); font-size: 0.9rem; }
-        .table-custom th { background: #f8f9fa; padding: 12px 15px; text-align: left; color: #555; font-weight: 600; }
-        .table-custom td { padding: 12px 15px; border-bottom: 1px solid #eee; }
-        .badge-tipe { padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-        
-        .tipe-masuk { background: #e6f9ed; color: #2ecc71; }
-        .tipe-keluar { background: #fdeaea; color: #e74c3c; }
-        .tipe-transfer { background: #e3f2fd; color: #3498db; }
+        /* CONTAINER */
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
+
+        /* HERO SECTION */
+        .hero-card {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white; padding: 2.5rem; border-radius: 20px; margin-bottom: 2rem;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2); position: relative; overflow: hidden;
+        }
+        .hero-content h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .hero-content p { opacity: 0.9; font-size: 1rem; }
+        .hero-decoration { position: absolute; right: -20px; top: -20px; font-size: 10rem; opacity: 0.1; transform: rotate(15deg); }
+
+        /* GRID SYSTEM */
+        .dashboard-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;
+        }
+
+        /* CARD STYLE */
+        .card {
+            background: white; padding: 1.5rem; border-radius: 16px; border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: transform 0.2s, box-shadow 0.2s;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+        .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+        .icon-box {
+            width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+        }
+        .card-title h3 { font-size: 1rem; font-weight: 600; color: #374151; }
+        .card-title span { font-size: 0.8rem; color: #9ca3af; }
+
+        /* CARD VARIANTS */
+        .card-masuk .icon-box { background: #dcfce7; color: #166534; }
+        .card-wallet .icon-box { background: #f3e8ff; color: #6b21a8; }
+        .card-stats .icon-box { background: #e0f2fe; color: #1e40af; }
+
+        /* BUTTONS */
+        .btn-action {
+            width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer;
+            font-size: 0.95rem; transition: 0.2s; margin-top: 10px;
+        }
+        .btn-green { background: #22c55e; color: white; } .btn-green:hover { background: #16a34a; }
+        .btn-purple { background: #8b5cf6; color: white; } .btn-purple:hover { background: #7c3aed; }
+        .btn-disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+
+        /* WALLET SPECIFIC */
+        .wallet-balance { font-size: 1.8rem; font-weight: 700; color: #111827; margin: 10px 0; }
+        .wallet-label { font-size: 0.85rem; color: #6b7280; font-weight: 500; }
+
+        /* STATS GRID */
+        .stats-mini-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .stat-box { background: #f9fafb; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #f3f4f6; }
+        .stat-val { display: block; font-weight: 700; color: #1f2937; font-size: 1.1rem; }
+        .stat-lbl { font-size: 0.75rem; color: #6b7280; text-transform: uppercase; }
+
+        /* PERFORMA BADGE */
+        .performa-badge {
+            margin-top: 15px; padding: 10px; border-radius: 8px; text-align: center; font-weight: 600; font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .bg-green-100 { background: #dcfce7; color: #166534; }
+        .bg-red-100 { background: #fee2e2; color: #991b1b; }
+
+        /* MODAL */
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 999; align-items: center; justify-content: center; }
+        .modal-box { background: white; width: 90%; max-width: 400px; padding: 2rem; border-radius: 16px; animation: zoomIn 0.2s; }
+        @keyframes zoomIn { from {transform: scale(0.9); opacity:0;} to {transform: scale(1); opacity:1;} }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #4b5563; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; }
     </style>
 </head>
 <body>
-    <header class="navbar">
-        <div class="container">
-            <h1 class="logo">💰 Keuangan & Kas</h1>
-            <nav><a href="../index.php" class="nav-link btn-logout">Kembali Dashboard</a></nav>
-        </div>
-    </header>
 
-    <main class="container">
+    <nav class="navbar">
+        <div class="logo"><i class="fas fa-cube"></i> Portal Karyawan</div>
+        <a href="logout.php" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+
+    <div class="container">
         
-        <div style="background: #2c3e50; color: white; padding: 2rem; border-radius: 20px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-            <div>
-                <h2 style="margin-bottom: 5px;">Total Aset Likuid</h2>
-                <div style="font-size: 2.5rem; font-weight: 800;">Rp <?php echo number_format($totalAset, 0, ',', '.'); ?></div>
-                <small>Gabungan Kas Laci + Operasional + Bank</small>
+        <div class="hero-card">
+            <div class="hero-content">
+                <h1><?= $sapaan ?>, <?= htmlspecialchars($me['nama']) ?></h1>
+                <p>Posisi: <b><?= htmlspecialchars($me['posisi']) ?></b></p>
             </div>
-            <div>
-                <button onclick="bukaModal('modalTutupBuku')" class="btn-submit-wd" style="background: #e74c3c; border: 2px solid rgba(255,255,255,0.2);">📕 TUTUP BUKU HARI INI</button>
-            </div>
+            <i class="fas fa-chart-line hero-decoration"></i>
         </div>
+
+        <?php if(isset($_GET['status'])): ?>
+            <div style="padding: 15px; margin-bottom: 20px; border-radius: 10px; text-align: center; font-weight: 600;
+                <?php 
+                    if($_GET['status']=='success') echo 'background:#dcfce7; color:#166534;';
+                    elseif($_GET['status']=='error') echo 'background:#fee2e2; color:#991b1b;';
+                    else echo 'background:#e0f2fe; color:#075985;';
+                ?>">
+                <?php 
+                    if($_GET['status']=='success') echo "✅ Absen berhasil dicatat!";
+                    if($_GET['status']=='already_absen') echo "⚠️ Anda sudah absen hari ini.";
+                    if($_GET['status']=='wd_success') echo "✅ Penarikan berhasil! Saldo telah ditransfer.";
+                    if($_GET['status']=='wd_error_saldo') echo "⚠️ Saldo BCA Perusahaan tidak cukup / Error.";
+                ?>
+            </div>
+        <?php endif; ?>
 
         <div class="dashboard-grid">
-            <div class="balance-card card-laci">
-                <h4>🔥 Kas Laci (Cashier)</h4>
-                <div class="balance-value">Rp <?php echo number_format($kasLaci, 0, ',', '.'); ?></div>
-                <div style="display: flex; gap: 5px;">
-                    <button onclick="modalTransfer('kas_laci')" class="btn-mini bg-purple">Transfer ➔</button>
-                    <button onclick="modalSetorBank()" class="btn-mini" style="background: #3498db;">Setor Bank</button>
+
+            <div class="card card-masuk">
+                <div class="card-header">
+                    <div class="icon-box"><i class="fas fa-calendar-check"></i></div>
+                    <div class="card-title"><h3>Absensi Harian</h3><span>Catat Kehadiran</span></div>
                 </div>
-            </div>
-
-            <div class="balance-card card-ops">
-                <h4>⚡ Kas Operasional</h4>
-                <div class="balance-value">Rp <?php echo number_format($kasOps, 0, ',', '.'); ?></div>
-                <div style="display: flex; gap: 5px;">
-                    <button onclick="modalPengeluaran('kas_ops')" class="btn-mini" style="background: #e67e22;">Catat Biaya</button>
-                    <button onclick="modalTransfer('kas_ops')" class="btn-mini bg-purple">Isi Saldo +</button>
-                </div>
-            </div>
-
-            <div class="balance-card card-bank">
-                <h4>🏦 Rekening Bank</h4>
-                <div class="balance-value">Rp <?php echo number_format($kasBank, 0, ',', '.'); ?></div>
-                <div style="display: flex; gap: 5px;">
-                    <button onclick="modalPrive()" class="btn-mini bg-dark">Tarik Prive</button>
-                    <button onclick="modalTransfer('bank')" class="btn-mini bg-purple">Transfer ➔</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-title">
-            <h3>📜 Mutasi Hari Ini (<?php echo date('d M Y'); ?>)</h3>
-        </div>
-        <div style="overflow-x:auto;">
-            <table class="table-custom">
-                <thead>
-                    <tr>
-                        <th>Jam</th>
-                        <th>Tipe</th>
-                        <th>Dari ➔ Ke</th>
-                        <th>Deskripsi</th>
-                        <th>Nominal</th>
-                        <th>Pelaku</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php 
-                    $count = 0;
-                    // Loop dari transaksi TERBARU ke LAMA
-                    foreach (array_reverse($trxData) as $t) {
-                        // Filter hanya hari ini
-                        if (substr($t['tanggal'], 0, 10) !== $hariIni) continue;
-                        $count++;
-                        
-                        $badgeClass = 'tipe-transfer';
-                        if ($t['tipe'] === 'pendapatan') $badgeClass = 'tipe-masuk';
-                        elseif ($t['tipe'] === 'pengeluaran' || $t['tipe'] === 'penarikan') $badgeClass = 'tipe-keluar';
-                        
-                        // Label Akun
-                        $sumber = $t['akun_sumber'] ?? '-';
-                        $tujuan = $t['akun_tujuan'] ?? '-';
-                        $arus = ($t['tipe']=='transfer') ? "$sumber ➔ $tujuan" : $sumber;
-                    ?>
-                    <tr>
-                        <td><?php echo substr($t['tanggal'], 11, 5); ?></td>
-                        <td><span class="badge-tipe <?php echo $badgeClass; ?>"><?php echo strtoupper($t['tipe']); ?></span></td>
-                        <td><?php echo htmlspecialchars($arus); ?></td>
-                        <td><?php echo htmlspecialchars($t['deskripsi']); ?></td>
-                        <td style="font-weight:bold;">Rp <?php echo number_format($t['jumlah'], 0, ',', '.'); ?></td>
-                        <td><?php echo htmlspecialchars($t['pelaku'] ?? 'Sys'); ?></td>
-                    </tr>
-                    <?php } ?>
-                    <?php if($count == 0): ?>
-                        <tr><td colspan="6" style="text-align:center; padding:2rem;">Belum ada transaksi hari ini.</td></tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="section-title">
-            <h3>📚 Riwayat Laporan Harian (Tutup Buku)</h3>
-        </div>
-        <div style="overflow-x:auto;">
-            <table class="table-custom">
-                <thead>
-                    <tr style="background:#34495e; color:white;">
-                        <th>Tanggal</th>
-                        <th>Waktu Tutup</th>
-                        <th>Kas Laci</th>
-                        <th>Kas Ops</th>
-                        <th>Bank</th>
-                        <th>Omzet</th>
-                        <th>Petugas</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach (array_reverse($historiLaporan) as $lap): ?>
-                    <tr>
-                        <td><strong><?php echo date('d M Y', strtotime($lap['tanggal'])); ?></strong></td>
-                        <td><?php echo $lap['waktu_tutup']; ?></td>
-                        <td>Rp <?php echo number_format($lap['saldo_laci'], 0, ',', '.'); ?></td>
-                        <td>Rp <?php echo number_format($lap['saldo_ops'], 0, ',', '.'); ?></td>
-                        <td>Rp <?php echo number_format($lap['saldo_bank'], 0, ',', '.'); ?></td>
-                        <td style="color:#2ecc71; font-weight:bold;">Rp <?php echo number_format($lap['omzet_hari_ini'], 0, ',', '.'); ?></td>
-                        <td><?php echo $lap['petugas']; ?></td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-
-    </main>
-
-    <div id="modalTransfer" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header"><h2>🔄 Transfer Antar Kas</h2><span class="close-modal" onclick="tutupModal('modalTransfer')">×</span></div>
-            <form action="proses_laporan.php" method="POST">
-                <input type="hidden" name="action" value="transfer_kas">
-                <div class="modal-form-group">
-                    <label>Dari Kas</label>
-                    <select name="sumber" id="transferSumber" class="form-control">
-                        <option value="kas_laci">Kas Laci</option>
-                        <option value="kas_ops">Kas Operasional</option>
-                        <option value="bank">Bank</option>
-                    </select>
-                </div>
-                <div class="modal-form-group">
-                    <label>Ke Kas</label>
-                    <select name="tujuan" class="form-control">
-                        <option value="kas_ops">Kas Operasional</option>
-                        <option value="bank">Bank</option>
-                        <option value="kas_laci">Kas Laci</option>
-                    </select>
-                </div>
-                <div class="modal-form-group"><label>Jumlah (Rp)</label><input type="number" name="jumlah" required class="form-control"></div>
-                <div class="modal-form-group"><label>Catatan</label><input type="text" name="catatan" required class="form-control" placeholder="Contoh: Topup Ops"></div>
-                <button type="submit" class="btn-submit-wd bg-purple">Transfer Sekarang</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="modalPengeluaran" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header"><h2>💸 Catat Pengeluaran</h2><span class="close-modal" onclick="tutupModal('modalPengeluaran')">×</span></div>
-            <form action="proses_laporan.php" method="POST">
-                <input type="hidden" name="action" value="catat_pengeluaran">
-                <div class="modal-form-group">
-                    <label>Sumber Dana</label>
-                    <select name="sumber" id="expSumber" class="form-control">
-                        <option value="kas_ops">Kas Operasional</option>
-                        <option value="kas_laci">Kas Laci</option>
-                        <option value="bank">Bank</option>
-                    </select>
-                </div>
-                <div class="modal-form-group"><label>Jumlah (Rp)</label><input type="number" name="jumlah" required class="form-control"></div>
-                <div class="modal-form-group"><label>Keperluan</label><input type="text" name="deskripsi" required class="form-control" placeholder="Beli Gas, Galon, dll"></div>
-                <button type="submit" class="btn-submit-wd" style="background:#e74c3c;">Simpan Pengeluaran</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="modalPrive" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header"><h2>🤵 Penarikan Owner (Prive)</h2><span class="close-modal" onclick="tutupModal('modalPrive')">×</span></div>
-            <form action="proses_laporan.php" method="POST">
-                <input type="hidden" name="action" value="tarik_prive">
-                <div class="modal-form-group">
-                    <label>Ambil Dari</label>
-                    <select name="sumber" class="form-control">
-                        <option value="bank">Bank</option>
-                        <option value="kas_laci">Kas Laci</option>
-                    </select>
-                </div>
-                <div class="modal-form-group"><label>Jumlah (Rp)</label><input type="number" name="jumlah" required class="form-control"></div>
-                <div class="modal-form-group"><label>Catatan</label><input type="text" name="catatan" required class="form-control" placeholder="Keperluan pribadi..."></div>
-                <button type="submit" class="btn-submit-wd bg-dark">Tarik Dana</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="modalTutupBuku" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header"><h2>📕 Konfirmasi Tutup Buku</h2><span class="close-modal" onclick="tutupModal('modalTutupBuku')">×</span></div>
-            <p style="margin-bottom:15px; color:#555;">Akan menyimpan snapshot keuangan saat ini ke Riwayat Laporan.</p>
-            <form action="proses_laporan.php" method="POST">
-                <input type="hidden" name="action" value="tutup_buku">
-                <input type="hidden" name="saldo_laci" value="<?php echo $kasLaci; ?>">
-                <input type="hidden" name="saldo_ops" value="<?php echo $kasOps; ?>">
-                <input type="hidden" name="saldo_bank" value="<?php echo $kasBank; ?>">
-                <input type="hidden" name="total_aset" value="<?php echo $totalAset; ?>">
-                <input type="hidden" name="omzet" value="<?php echo $omzetHariIni; ?>">
                 
-                <div style="background:#f9f9f9; padding:10px; border-radius:8px; margin-bottom:15px;">
-                    <div><strong>Kas Laci:</strong> Rp <?php echo number_format($kasLaci, 0, ',', '.'); ?></div>
-                    <div><strong>Omzet Hari Ini:</strong> Rp <?php echo number_format($omzetHariIni, 0, ',', '.'); ?></div>
+                <form action="proses_absen.php" method="POST">
+                    <?php if(($me['terakhir_absen'] ?? '') == date('Y-m-d')): ?>
+                        <button type="button" class="btn-action btn-disabled" disabled>
+                            <i class="fas fa-check-circle"></i> Sudah Absen Hari Ini
+                        </button>
+                    <?php else: ?>
+                        <button type="submit" class="btn-action btn-green">
+                            <i class="fas fa-fingerprint"></i> Absen Sekarang
+                        </button>
+                    <?php endif; ?>
+                </form>
+            </div>
+
+            <div class="card card-wallet">
+                <div class="card-header">
+                    <div class="icon-box"><i class="fas fa-wallet"></i></div>
+                    <div class="card-title"><h3>Dompet & Bonus</h3><span>Saldo Siap Cair</span></div>
+                </div>
+                <div>
+                    <span class="wallet-label">Total Saldo</span>
+                    <div class="wallet-balance">Rp <?= number_format($me['bonus_pending'] ?? 0, 0, ',', '.') ?></div>
+                </div>
+                <button onclick="document.getElementById('modalWd').style.display='flex'" class="btn-action btn-purple">
+                    <i class="fas fa-money-bill-wave"></i> Tarik ke Rekening
+                </button>
+            </div>
+
+            <div class="card card-stats">
+                <div class="card-header">
+                    <div class="icon-box"><i class="fas fa-chart-pie"></i></div>
+                    <div class="card-title"><h3>Kinerja Anda</h3><span>Penilaian HRD</span></div>
+                </div>
+                <div class="stats-mini-grid">
+                    <div class="stat-box"><span class="stat-val"><?= $me['hadir'] ?? 0 ?></span><span class="stat-lbl">Hadir</span></div>
+                    <div class="stat-box"><span class="stat-val"><?= $me['izin'] ?? 0 ?></span><span class="stat-lbl">Izin</span></div>
+                    <div class="stat-box"><span class="stat-val"><?= $me['alpa'] ?? 0 ?></span><span class="stat-lbl">Alpa</span></div>
+                </div>
+                
+                <div class="performa-badge <?= $performaColor ?>">
+                    <i class="fas <?= $performaIcon ?>"></i> Status Performa: <?= $me['performa'] ?? 'Baik' ?>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="modalWd" class="modal">
+        <div class="modal-box">
+            <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
+                <h3 style="font-size:1.2rem; color:#1f2937;">💸 Tarik Saldo</h3>
+                <span onclick="document.getElementById('modalWd').style.display='none'" style="cursor:pointer; font-size:1.5rem;">&times;</span>
+            </div>
+            
+            <form action="proses_tarik.php" method="POST">
+                <input type="hidden" name="id" value="<?= $me['id'] ?>">
+                
+                <div class="form-group">
+                    <label>Nominal Penarikan (Rp)</label>
+                    <input type="number" name="amount" class="form-control" 
+                           max="<?= $me['bonus_pending'] ?? 0 ?>" placeholder="Maks: <?= $me['bonus_pending'] ?? 0 ?>" required>
+                    <small style="color:#6b7280; display:block; margin-top:5px;">
+                        Maksimal: <b>Rp <?= number_format($me['bonus_pending'] ?? 0, 0, ',', '.') ?></b>
+                    </small>
                 </div>
 
-                <button type="submit" class="btn-submit-wd" style="background:#27ae60;">✅ Simpan & Tutup Buku</button>
+                <button type="submit" class="btn-action btn-purple">Cairkan Sekarang</button>
             </form>
         </div>
     </div>
 
     <script>
-        // Helper Modal
-        function bukaModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function tutupModal(id) { document.getElementById(id).style.display = 'none'; }
-        
-        // Trigger Spesifik
-        function modalTransfer(sumber) {
-            document.getElementById('transferSumber').value = sumber;
-            bukaModal('modalTransfer');
-        }
-        function modalPengeluaran(sumber) {
-            document.getElementById('expSumber').value = sumber;
-            bukaModal('modalPengeluaran');
-        }
-        function modalSetorBank() {
-            document.getElementById('transferSumber').value = 'kas_laci';
-            // Setor Bank itu intinya Transfer Laci -> Bank
-            document.querySelector('select[name="tujuan"]').value = 'bank';
-            bukaModal('modalTransfer');
-        }
-        function modalPrive() { bukaModal('modalPrive'); }
-
-        // Close on outside click
         window.onclick = function(e) {
-            if (e.target.classList.contains('modal-overlay')) e.target.style.display = 'none';
+            if (e.target == document.getElementById('modalWd')) {
+                document.getElementById('modalWd').style.display = 'none';
+            }
         }
     </script>
 

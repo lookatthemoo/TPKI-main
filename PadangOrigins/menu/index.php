@@ -144,11 +144,16 @@ foreach ($_SESSION['cart'] as $item) {
                             <span>Jadi</span>
                         </div>
                     </div>
+
+                    <button onclick="buatPesananBaru()" style="width:100%; background:#444; border:1px solid #555; color:#fff; padding:10px; margin-top:20px; border-radius:8px; cursor:pointer; font-size:0.9rem;">
+                        + Buat Pesanan Baru
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-<div id="modalCheckout" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center;">
+
+    <div id="modalCheckout" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center;">
         <div class="modal-content" style="background:#222; padding:25px; border-radius:15px; width:90%; max-width:400px; color:white; border:1px solid #444;">
             <h2 style="text-align:center; margin-bottom:20px; color:#e74c3c;">Konfirmasi Pesanan</h2>
             
@@ -183,6 +188,18 @@ foreach ($_SESSION['cart'] as $item) {
     </div>
 
     <script>
+        // [SCRIPT BARU] Fungsi untuk reset status pesanan
+        function buatPesananBaru() {
+            if(confirm('Pesanan sebelumnya akan tetap diproses di dapur, tapi statusnya tidak akan tampil disini lagi. Lanjut pesan baru?')) {
+                fetch('cek_status.php?action=clear')
+                .then(response => response.json())
+                .then(data => {
+                    // Reload halaman agar cart kosong dan tracker hilang
+                    location.reload();
+                });
+            }
+        }
+
         function openCheckoutModal() {
             document.getElementById('modalCheckout').style.display = 'flex';
         }

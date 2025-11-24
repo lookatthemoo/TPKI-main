@@ -1,0 +1,22 @@
+[
+    {
+        "id": "item_69247042786f6",
+        "nama": "beras",
+        "kategori": "Bahan Mentah",
+        "qty": 3,
+        "satuan": "40",
+        "harga": 30000,
+        "total_nilai": 90000,
+        "updated_at": "2025-11-24 14:48:34"
+    },
+    {
+        "id": "item_692470648b913",
+        "nama": "ayam",
+        "kategori": "Bahan Mentah",
+        "qty": 5,
+        "satuan": "kg",
+        "harga": 50000,
+        "total_nilai": 250000,
+        "updated_at": "2025-11-24 14:49:08"
+    }
+]

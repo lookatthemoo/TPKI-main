@@ -9,11 +9,11 @@
         "saldo_gaji": 0,
         "saldo_bonus": 0,
         "bonus_pending": 0,
-        "hadir": 0,
+        "hadir": 1,
         "izin": 0,
         "performa": "Baik",
-        "terakhir_gaji": "-",
-        "terakhir_absen": ""
+        "terakhir_gaji": "2025-11-25",
+        "terakhir_absen": "2025-11-25"
     },
     {
         "id": "KRY-1763817444",
