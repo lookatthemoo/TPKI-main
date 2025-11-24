@@ -28,5 +28,102 @@
         "jumlah": 500,
         "deskripsi": "Withdraw Saldo Karyawan",
         "pelaku": "william eka putra supriadi"
+    },
+    {
+        "id": "SAL-6924ba1e5983a",
+        "tanggal": "2025-11-25 03:03:42",
+        "tipe": "pengeluaran",
+        "akun_sumber": "BCA",
+        "akun_tujuan": "Karyawan: william eka putra supriadi",
+        "jumlah": 500,
+        "deskripsi": "Gaji Bulanan: william eka putra supriadi",
+        "pelaku": "admin"
+    },
+    {
+        "id": "WD-6924ba2c3be79",
+        "tanggal": "2025-11-25 03:03:56",
+        "tipe": "pengeluaran",
+        "akun_sumber": "BCA",
+        "akun_tujuan": "Karyawan: william eka putra supriadi",
+        "jumlah": 500,
+        "deskripsi": "Withdraw Saldo Karyawan",
+        "pelaku": "william eka putra supriadi"
+    },
+    {
+        "id": "TRX-1764015500",
+        "tanggal": "2025-11-25 03:18:20",
+        "tipe": "transfer",
+        "akun_sumber": "BCA",
+        "akun_tujuan": "kas_ops",
+        "jumlah": 20000,
+        "deskripsi": "Transfer: BCA -> kas_ops (setor tunai)",
+        "pelaku": "admin"
+    },
+    {
+        "id": "TRX-1764016416",
+        "tanggal": "2025-11-25 03:33:36",
+        "tipe": "pengeluaran",
+        "akun_sumber": "kas_ops",
+        "jumlah": 20000,
+        "deskripsi": "beli bensin",
+        "pelaku": "admin"
+    },
+    {
+        "id": "order_6924c15d6911d",
+        "tanggal": "2025-11-24 20:34:37",
+        "tipe": "pendapatan",
+        "status": "Telah Diambil",
+        "jumlah": 25000,
+        "akun_sumber": "Customer",
+        "akun_tujuan": "kas_laci",
+        "deskripsi": "Order (irwan): 1x Gulai Cincang",
+        "pelaku": "System",
+        "items": [
+            {
+                "name": "Gulai Cincang",
+                "price": 25000,
+                "qty": 1
+            }
+        ],
+        "customer_name": "irwan"
+    },
+    {
+        "id": "TRX-1764017089",
+        "tanggal": "2025-11-25 03:44:49",
+        "tipe": "transfer",
+        "akun_sumber": "kas_laci",
+        "akun_tujuan": "kas_ops",
+        "jumlah": 25000,
+        "deskripsi": "Transfer: kas_laci -> kas_ops (setor)",
+        "pelaku": "admin"
+    },
+    {
+        "id": "order_6924c51a8b719",
+        "tanggal": "2025-11-24 20:50:34",
+        "tipe": "pendapatan",
+        "status": "Diterima",
+        "jumlah": 25000,
+        "akun_sumber": "Customer",
+        "akun_tujuan": "kas_laci",
+        "deskripsi": "Order (irwan): 1x Gulai Cincang",
+        "pelaku": "System",
+        "items": [
+            {
+                "name": "Gulai Cincang",
+                "price": 25000,
+                "qty": 1
+            }
+        ],
+        "customer_name": "irwan"
+    },
+    {
+        "id": "TRX-OPS-6924c6e77013d",
+        "tanggal": "2025-11-25 03:58:15",
+        "tipe": "pengeluaran",
+        "akun_sumber": "kas_ops",
+        "akun_tujuan": "Pengeluaran",
+        "jumlah": 20000,
+        "deskripsi": "Kas Ops: beli bensin",
+        "pelaku": "admin"
     }
 ]

@@ -100,6 +100,14 @@ $totalMenu = count($menuList);
                 <p>Manajemen tim, absensi, dan penggajian.</p>
                 <a href="gaji.php" class="card-btn" style="background:#673ab7; color:white;">Kelola Tim ➔</a>
             </div>
+            
+            <div class="nav-card">
+                <span class="status-badge" style="background:#fee2e2; color:#991b1b;">EXPENSE</span>
+                <div class="card-icon" style="color: #ef4444; background: #fee2e2;">💸</div>
+                <h3>Pusat Pengeluaran</h3>
+                <p>Catat Gaji, Bonus, Operasional, & Belanja.</p>
+                <a href="pengeluaran/" class="card-btn" style="background: #ef4444; color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);">Kelola Biaya ➔</a>
+            </div>
 
             <div class="nav-card">
                 <div class="card-icon" style="color: #9b59b6; background: #f5eef8;">🍔</div>

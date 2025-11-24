@@ -1,0 +1,22 @@
+[
+    {
+        "id": "EXP-AUTO-6924ba1e59c2d",
+        "tanggal": "2025-11-25 03:03:42",
+        "kategori": "Gaji Karyawan",
+        "deskripsi": "Gaji Bulanan: william eka putra supriadi",
+        "penerima": "william eka putra supriadi",
+        "sumber_dana": "BCA",
+        "jumlah": 500,
+        "admin": "admin (Auto)"
+    },
+    {
+        "id": "EXP-OPS-6924c6e7720fc",
+        "tanggal": "2025-11-25 03:58:15",
+        "kategori": "Operasional",
+        "deskripsi": "beli bensin",
+        "penerima": "-",
+        "sumber_dana": "Kas Operasional",
+        "jumlah": 20000,
+        "admin": "admin"
+    }
+]
