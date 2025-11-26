@@ -179,6 +179,16 @@ $totalMenu = count($menuList);
                     style="background: #059669; color: white; box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);">Cek Daftar
                     Belanja ➔</a>
             </div>
+
+            <div class="nav-card">
+                <span class="status-badge" style="background:#f0fdfa; color:#0d9488;">SURVIVAL</span>
+                <div class="card-icon" style="color: #14b8a6; background: #f0fdfa;">🛡️</div>
+                <h3>Napas Bisnis (Runway)</h3>
+                <p>Estimasi ketahanan dana kas operasional (Bulan).</p>
+                <a href="runway.php" class="card-btn"
+                    style="background: #14b8a6; color: white; box-shadow: 0 4px 15px rgba(20, 184, 166, 0.3);">Cek
+                    Status Aman ➔</a>
+            </div>
         </section>
 
     </main>
