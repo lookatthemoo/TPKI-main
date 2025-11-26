@@ -116,6 +116,14 @@ $totalMenu = count($menuList);
                 <button onclick="bukaModalMenu()" class="card-btn" style="background: #9b59b6; color: white;">Tambah Menu +</button>
             </div>
 
+            <div class="nav-card">
+                <span class="status-badge" style="background:#E0F2F1; color:#00897B;">INVEST</span>
+                <div class="card-icon" style="color: #00897B; background: #E0F2F1;">🤝</div>
+                <h3>Portal Investor</h3>
+                <p>Akses laporan dividen, profit sharing & pemodal.</p>
+                <a href="investor/index.php" class="card-btn" style="background: #00897B; color: white; box-shadow: 0 4px 15px rgba(0, 137, 123, 0.3);">Masuk Investor ➔</a>
+            </div>
+
         </section>
 
     </main>

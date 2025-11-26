@@ -62,5 +62,20 @@
         "performa": "Baik",
         "terakhir_gaji": "2025-11-26",
         "terakhir_absen": "2025-11-26"
+    },
+    {
+        "id": "EMP-6926dcd7de230",
+        "nama": "tes",
+        "posisi": "qc",
+        "gaji_pokok": 200,
+        "hadir": 0,
+        "izin": 0,
+        "alpa": 0,
+        "bonus_pending": 0,
+        "performa": "Baik",
+        "terakhir_gaji": "-",
+        "terakhir_absen": "-",
+        "username": "tes",
+        "password": "12345"
     }
 ]

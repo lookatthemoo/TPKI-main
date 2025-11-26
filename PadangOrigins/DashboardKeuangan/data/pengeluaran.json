@@ -20,16 +20,6 @@
         "admin": "admin"
     },
     {
-        "id": "EXP-OPS-6926b2fd3182a",
-        "tanggal": "2025-11-26 14:57:49",
-        "kategori": "Operasional",
-        "deskripsi": "beli sabu",
-        "penerima": "-",
-        "sumber_dana": "Kas Operasional",
-        "jumlah": 100000,
-        "admin": "admin"
-    },
-    {
         "id": "EXP-AUTO-6926b4b3da0d8",
         "tanggal": "2025-11-26 15:05:07",
         "kategori": "Gaji Karyawan",
@@ -118,5 +108,35 @@
         "sumber_dana": "BCA",
         "jumlah": 501,
         "admin": "admin (Auto)"
+    },
+    {
+        "id": "EXP-INV-69272abc87bd3",
+        "tanggal": "2025-11-26 16:28:44",
+        "kategori": "Investasi Saham",
+        "deskripsi": "Beli 20 Lot BBCA @ 9.800",
+        "penerima": "Bursa Efek \/ Broker",
+        "sumber_dana": "Mandiri",
+        "jumlah": 19600000,
+        "admin": "john"
+    },
+    {
+        "id": "EXP-INV-69272aee894b6",
+        "tanggal": "2025-11-26 16:29:34",
+        "kategori": "Investasi Saham",
+        "deskripsi": "Beli 1 Lot BBRI @ 5.666",
+        "penerima": "Bursa Efek \/ Broker",
+        "sumber_dana": "Mandiri",
+        "jumlah": 566600,
+        "admin": "john"
+    },
+    {
+        "id": "EXP-INV-69272af16be2a",
+        "tanggal": "2025-11-26 16:29:37",
+        "kategori": "Investasi Saham",
+        "deskripsi": "Beli 1 Lot TLKM @ 3.807",
+        "penerima": "Bursa Efek \/ Broker",
+        "sumber_dana": "Mandiri",
+        "jumlah": 380700,
+        "admin": "john"
     }
 ]

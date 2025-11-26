@@ -166,13 +166,6 @@ $totalAset = $kasLaci + $kasOps + $totalSaldoBank;
             </div>
         </div>
 
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2rem;">
-            <h3 style="margin:0;">📜 Laporan Kustom</h3>
-            <div style="display:flex; gap:10px;">
-                <button onclick="document.getElementById('modalKasOps').style.display='flex'" class="btn-ops">⚡ Catat Kas Ops</button>
-                <button onclick="document.getElementById('modalAddReport').style.display='flex'" class="btn-add">+ Widget</button>
-            </div>
-        </div>
 
         <div class="widgets-container">
             <?php if (!empty($myReports)): ?>

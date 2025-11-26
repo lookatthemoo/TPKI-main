@@ -410,3 +410,90 @@ table th { background: #f8f9fa; color: #999; font-size: 0.8rem; text-transform: 
     body { background: white; }
     .container { width: 100%; max-width: 100%; }
 }
+
+/* =========================================
+   7. AESTHETIC ANIMATIONS (NEW)
+   Menambahkan nyawa pada dashboard tanpa merusak layout
+========================================= */
+
+/* 1. Definisi Keyframes: Gerakan masuk yang elegan dari bawah ke atas */
+@keyframes fadeInUpSmooth {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 2. Animasi Fade In untuk Teks Welcome */
+@keyframes fadeInSoft {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Terapkan pada Welcome Message */
+.welcome-message {
+    animation: fadeInSoft 0.8s ease-out forwards;
+}
+
+/* 3. Terapkan pada Kartu (Nav Card) dengan Staggering */
+.nav-card {
+    opacity: 0; /* Sembunyikan state awal agar tidak glitch */
+    /* Menggunakan cubic-bezier agar gerakan 'berhenti' dengan sangat mulus (natural) */
+    animation: fadeInUpSmooth 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Delay bertingkat (Staggering) agar kartu muncul satu per satu seperti efek domino */
+/* Semakin banyak kartu, semakin panjang antriannya */
+.nav-card:nth-child(1) { animation-delay: 0.10s; }
+.nav-card:nth-child(2) { animation-delay: 0.15s; }
+.nav-card:nth-child(3) { animation-delay: 0.20s; }
+.nav-card:nth-child(4) { animation-delay: 0.25s; }
+.nav-card:nth-child(5) { animation-delay: 0.30s; }
+.nav-card:nth-child(6) { animation-delay: 0.35s; }
+.nav-card:nth-child(7) { animation-delay: 0.40s; }
+.nav-card:nth-child(8) { animation-delay: 0.45s; }
+.nav-card:nth-child(9) { animation-delay: 0.50s; }
+
+/* 4. Micro-interaction saat Hover (Kecil tapi berdampak) */
+.nav-card:hover .card-icon {
+    /* Icon sedikit membesar dan berputar sangat halus */
+    transform: scale(1.15) rotate(6deg);
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.nav-card:hover {
+    /* Shadow yang lebih dalam namun lembut */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1); 
+    transform: translateY(-8px); /* Override transisi kasar jika ada */
+    border-color: rgba(37, 117, 252, 0.4);
+}
+
+/* 5. Efek Kilau (Sheen) pada Tombol saat Hover */
+.card-btn {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: all 0.4s ease;
+}
+
+/* Efek cahaya lewat saat hover */
+.card-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 40px;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255, 0.4), transparent);
+    transform: skewX(-20deg);
+    transition: none; 
+}
+
+.card-btn:hover::after {
+    left: 120%; /* Bergerak dari kiri ke kanan */
+    transition: 0.6s ease-in-out;
+}

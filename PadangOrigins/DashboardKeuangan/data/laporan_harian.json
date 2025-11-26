@@ -1,2 +1,21 @@
 [
+    {
+        "tanggal": "2025-11-26",
+        "waktu_tutup": "17:50:24",
+        "saldo_laci": 46600230496,
+        "saldo_ops": 0,
+        "saldo_bank": 61200014490,
+        "rincian_bank": {
+            "BCA": 37200014490,
+            "Mandiri": 0,
+            "BRI": 24000000000,
+            "BNI": 0,
+            "SeaBank": 0,
+            "GoPay": 0,
+            "OVO": 0,
+            "DANA": 0
+        },
+        "total_aset": 107800244986,
+        "petugas": "admin"
+    }
 ]
