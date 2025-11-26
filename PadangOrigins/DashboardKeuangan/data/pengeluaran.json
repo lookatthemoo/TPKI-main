@@ -18,5 +18,105 @@
         "sumber_dana": "Kas Operasional",
         "jumlah": 20000,
         "admin": "admin"
+    },
+    {
+        "id": "EXP-OPS-6926b2fd3182a",
+        "tanggal": "2025-11-26 14:57:49",
+        "kategori": "Operasional",
+        "deskripsi": "beli sabu",
+        "penerima": "-",
+        "sumber_dana": "Kas Operasional",
+        "jumlah": 100000,
+        "admin": "admin"
+    },
+    {
+        "id": "EXP-AUTO-6926b4b3da0d8",
+        "tanggal": "2025-11-26 15:05:07",
+        "kategori": "Gaji Karyawan",
+        "deskripsi": "Gaji Bulanan: william eka putra supriadi",
+        "penerima": "william eka putra supriadi",
+        "sumber_dana": "BCA",
+        "jumlah": 500,
+        "admin": "admin (Auto)"
+    },
+    {
+        "id": "EXP-BON-6926b68f22a4a",
+        "tanggal": "2025-11-26 15:13:03",
+        "kategori": "Bonus",
+        "deskripsi": "Bonus Kinerja: william eka putra supriadi",
+        "penerima": "william eka putra supriadi",
+        "sumber_dana": "BCA",
+        "jumlah": 500,
+        "admin": "admin (Auto)"
+    },
+    {
+        "id": "EXP-AUTO-6926bb233284a",
+        "tanggal": "2025-11-26 15:32:35",
+        "kategori": "Gaji Karyawan",
+        "deskripsi": "Gaji Bulanan: william eka putra supriadi",
+        "penerima": "william eka putra supriadi",
+        "sumber_dana": "BCA",
+        "jumlah": 500,
+        "admin": "admin (Auto)"
+    },
+    {
+        "id": "EXP-AUTO-6926be94db2eb",
+        "tanggal": "2025-11-26 15:47:16",
+        "kategori": "Gaji Karyawan",
+        "deskripsi": "Gaji Bulanan: Ahmad riziq",
+        "penerima": "Ahmad riziq",
+        "sumber_dana": "BCA",
+        "jumlah": 501,
+        "admin": "Admin (Auto)"
+    },
+    {
+        "id": "EXP-AUTO-6926beb45327b",
+        "tanggal": "2025-11-26 15:47:48",
+        "kategori": "Gaji Karyawan",
+        "deskripsi": "Gaji Bulanan: Ahmad riziq",
+        "penerima": "Ahmad riziq",
+        "sumber_dana": "BCA",
+        "jumlah": 501,
+        "admin": "admin (Auto)"
+    },
+    {
+        "id": "EXP-BON-6926bee3452f4",
+        "tanggal": "2025-11-26 15:48:35",
+        "kategori": "Bonus",
+        "deskripsi": "Bonus Kinerja: Ahmad riziq",
+        "penerima": "Ahmad riziq",
+        "sumber_dana": "BCA",
+        "jumlah": 1002,
+        "admin": "admin (Auto)"
+    },
+    {
+        "id": "EXP-AUTO-6926c00264cc2",
+        "tanggal": "2025-11-26 15:53:22",
+        "kategori": "Gaji Karyawan",
+        "deskripsi": "Gaji Bulanan: zidan syauqi rahman",
+        "penerima": "zidan syauqi rahman",
+        "sumber_dana": "BCA",
+        "jumlah": 200000000,
+        "admin": "admin (Auto)"
+    },
+    {
+        "id": "EXP-BON-6926c03392bd9",
+        "tanggal": "2025-11-26 15:54:11",
+        "kategori": "Bonus",
+        "deskripsi": "Bonus Kinerja: zidan syauqi rahman",
+        "penerima": "zidan syauqi rahman",
+        "sumber_dana": "BCA",
+        "jumlah": 200000000,
+        "admin": "Admin (Auto)"
+    },
+    {
+        "id": "EXP-AUTO-6926d677ea04d",
+        "tanggal": "2025-11-26 17:29:11",
+        "kategori": "Gaji Karyawan",
+        "deskripsi": "Gaji Bulanan: Ahmad riziq",
+        "penerima": "Ahmad riziq",
+        "sumber_dana": "BCA",
+        "jumlah": 501,
+        "admin": "admin (Auto)"
     }
 ]

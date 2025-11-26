@@ -4,7 +4,7 @@
         "nama_bank": "BCA",
         "jenis": "bank",
         "nomer": "8901234567",
-        "saldo": 22500
+        "saldo": 37600018495
     },
     {
         "id": "BANK-MANDIRI",
@@ -18,7 +18,7 @@
         "nama_bank": "BRI",
         "jenis": "bank",
         "nomer": "3456789012",
-        "saldo": 0
+        "saldo": 24000000000
     },
     {
         "id": "BANK-BNI",

@@ -1,21 +1,2 @@
 [
-    {
-        "tanggal": "2025-11-25",
-        "waktu_tutup": "02:06:29",
-        "saldo_laci": 0,
-        "saldo_ops": 0,
-        "saldo_bank": 25000,
-        "rincian_bank": {
-            "BCA": 25000,
-            "Mandiri": 0,
-            "BRI": 0,
-            "BNI": 0,
-            "SeaBank": 0,
-            "GoPay": 0,
-            "OVO": 0,
-            "DANA": 0
-        },
-        "total_aset": 25000,
-        "petugas": "admin"
-    }
 ]

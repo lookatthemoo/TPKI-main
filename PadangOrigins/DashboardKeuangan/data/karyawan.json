@@ -8,12 +8,12 @@
         "gaji_pokok": 500,
         "saldo_gaji": 0,
         "saldo_bonus": 0,
-        "bonus_pending": 0,
-        "hadir": 1,
+        "bonus_pending": 1500,
+        "hadir": 2,
         "izin": 0,
         "performa": "Baik",
-        "terakhir_gaji": "2025-11-25",
-        "terakhir_absen": "2025-11-25"
+        "terakhir_gaji": "2025-11-26",
+        "terakhir_absen": "2025-11-26"
     },
     {
         "id": "KRY-1763817444",
@@ -24,12 +24,12 @@
         "gaji_pokok": 501,
         "saldo_gaji": 0,
         "saldo_bonus": 0,
-        "bonus_pending": 0,
-        "hadir": 0,
+        "bonus_pending": 2505,
+        "hadir": 1,
         "izin": 0,
         "performa": "Baik",
-        "terakhir_gaji": "-",
-        "terakhir_absen": ""
+        "terakhir_gaji": "2025-11-26",
+        "terakhir_absen": "2025-11-26"
     },
     {
         "id": "KRY-1763817475",
@@ -56,11 +56,11 @@
         "gaji_pokok": 200000000,
         "saldo_gaji": 0,
         "saldo_bonus": 0,
-        "bonus_pending": 0,
-        "hadir": 0,
+        "bonus_pending": 400000000,
+        "hadir": 1,
         "izin": 0,
         "performa": "Baik",
-        "terakhir_gaji": "-",
-        "terakhir_absen": ""
+        "terakhir_gaji": "2025-11-26",
+        "terakhir_absen": "2025-11-26"
     }
 ]

@@ -1,15 +1,5 @@
 [
     {
-        "id": "item_69247042786f6",
-        "nama": "beras",
-        "kategori": "Bahan Mentah",
-        "qty": 3,
-        "satuan": "40",
-        "harga": 30000,
-        "total_nilai": 90000,
-        "updated_at": "2025-11-24 14:48:34"
-    },
-    {
         "id": "item_692470648b913",
         "nama": "ayam",
         "kategori": "Bahan Mentah",
@@ -18,5 +8,535 @@
         "harga": 50000,
         "total_nilai": 250000,
         "updated_at": "2025-11-24 14:49:08"
+    },
+    {
+        "id": "item_6926c28411706",
+        "nama": "Beras",
+        "kategori": "Bahan Mentah",
+        "qty": 10,
+        "satuan": "liter",
+        "harga": 12000,
+        "total_nilai": 120000,
+        "updated_at": "2025-11-26 09:04:40"
+    },
+    {
+        "id": "item_6926c31421b86",
+        "nama": "Minyak Goreng",
+        "kategori": "Bahan Mentah",
+        "qty": 5,
+        "satuan": "liter",
+        "harga": 18000,
+        "total_nilai": 90000,
+        "updated_at": "2025-11-26 09:07:02"
+    },
+    {
+        "id": "item_6926c3c65a654",
+        "nama": "kepala tua(parut)",
+        "kategori": "Bahan Mentah",
+        "qty": 5,
+        "satuan": "pcs",
+        "harga": 15000,
+        "total_nilai": 75000,
+        "updated_at": "2025-11-26 09:09:39"
+    },
+    {
+        "id": "item_6926c419c85ce",
+        "nama": "Daging Sapi",
+        "kategori": "Bahan Mentah",
+        "qty": 4,
+        "satuan": "kg",
+        "harga": 135000,
+        "total_nilai": 540000,
+        "updated_at": "2025-11-26 09:11:01"
+    },
+    {
+        "id": "item_6926c4732df63",
+        "nama": "Ikan Tongkol",
+        "kategori": "Bahan Mentah",
+        "qty": 4,
+        "satuan": "kg",
+        "harga": 37000,
+        "total_nilai": 148000,
+        "updated_at": "2025-11-26 09:12:19"
+    },
+    {
+        "id": "item_6926c4b678fee",
+        "nama": "Cabai merah keriting",
+        "kategori": "Bahan Mentah",
+        "qty": 3,
+        "satuan": "kg",
+        "harga": 65000,
+        "total_nilai": 195000,
+        "updated_at": "2025-11-26 09:13:26"
+    },
+    {
+        "id": "item_6926c4f5b08f1",
+        "nama": "Cabai rawit merah(setan)",
+        "kategori": "Bahan Mentah",
+        "qty": 3,
+        "satuan": "kg",
+        "harga": 55000,
+        "total_nilai": 165000,
+        "updated_at": "2025-11-26 09:14:29"
+    },
+    {
+        "id": "item_6926c51b7f6aa",
+        "nama": "Bawan Merah",
+        "kategori": "Bahan Mentah",
+        "qty": 5,
+        "satuan": "kg",
+        "harga": 35000,
+        "total_nilai": 175000,
+        "updated_at": "2025-11-26 09:15:07"
+    },
+    {
+        "id": "item_6926c55d81cee",
+        "nama": "Bawan Putih(Bonggol)",
+        "kategori": "Bahan Mentah",
+        "qty": 4,
+        "satuan": "kg",
+        "harga": 37000,
+        "total_nilai": 148000,
+        "updated_at": "2025-11-26 09:16:13"
+    },
+    {
+        "id": "item_6926c5ce897fd",
+        "nama": "Paket Bumbu Dedaunan(Sereh, Daun, Salam, Jeruk, Kunyit)",
+        "kategori": "Bahan Mentah",
+        "qty": 8,
+        "satuan": "pcs",
+        "harga": 25000,
+        "total_nilai": 200000,
+        "updated_at": "2025-11-26 09:18:06"
+    },
+    {
+        "id": "item_6926c61063f19",
+        "nama": "Nangka Muda(Gori\/Tewel)",
+        "kategori": "Bahan Mentah",
+        "qty": 4,
+        "satuan": "kg",
+        "harga": 15000,
+        "total_nilai": 60000,
+        "updated_at": "2025-11-26 09:19:12"
+    },
+    {
+        "id": "item_6926c64a1c005",
+        "nama": "Daun Singkong",
+        "kategori": "Bahan Mentah",
+        "qty": 2,
+        "satuan": "kg",
+        "harga": 15000,
+        "total_nilai": 30000,
+        "updated_at": "2025-11-26 09:20:10"
+    },
+    {
+        "id": "item_6926c671e30bd",
+        "nama": "Kacang Panjang",
+        "kategori": "Bahan Mentah",
+        "qty": 2,
+        "satuan": "kg",
+        "harga": 15000,
+        "total_nilai": 30000,
+        "updated_at": "2025-11-26 09:20:49"
+    },
+    {
+        "id": "item_6926c6904a487",
+        "nama": "Timun",
+        "kategori": "Bahan Mentah",
+        "qty": 2,
+        "satuan": "kg",
+        "harga": 9000,
+        "total_nilai": 18000,
+        "updated_at": "2025-11-26 09:21:20"
+    },
+    {
+        "id": "item_6926c773ec6df",
+        "nama": "Cabai Merah Giling(Basah)",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 2,
+        "satuan": "kg",
+        "harga": 45000,
+        "total_nilai": 90000,
+        "updated_at": "2025-11-26 09:25:07"
+    },
+    {
+        "id": "item_6926c7a378ee1",
+        "nama": "Bawang Merah Giling",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 2,
+        "satuan": "kg",
+        "harga": 40000,
+        "total_nilai": 80000,
+        "updated_at": "2025-11-26 09:25:55"
+    },
+    {
+        "id": "item_6926c7e5e3746",
+        "nama": "Bumbu Lengkuas &amp; Jahe Giling",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 4,
+        "satuan": "kg",
+        "harga": 30000,
+        "total_nilai": 120000,
+        "updated_at": "2025-11-26 09:27:01"
+    },
+    {
+        "id": "item_6926c82f206f4",
+        "nama": "Bumbu &quot;jadi&quot;(Racikan Pasar)",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 4,
+        "satuan": "kg",
+        "harga": 8000,
+        "total_nilai": 32000,
+        "updated_at": "2025-11-26 09:28:15"
+    },
+    {
+        "id": "item_6926c8e92ab63",
+        "nama": "Santan Murni (Pati)",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 4,
+        "satuan": "kg",
+        "harga": 18000,
+        "total_nilai": 72000,
+        "updated_at": "2025-11-26 09:31:21"
+    },
+    {
+        "id": "item_6926c91bd59ee",
+        "nama": "Santan Encer",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 2,
+        "satuan": "kg",
+        "harga": 8000,
+        "total_nilai": 16000,
+        "updated_at": "2025-11-26 09:32:11"
+    },
+    {
+        "id": "item_6926c93c7c4e1",
+        "nama": "Kelapa Parut",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 3,
+        "satuan": "kg",
+        "harga": 8000,
+        "total_nilai": 24000,
+        "updated_at": "2025-11-26 09:32:44"
+    },
+    {
+        "id": "item_6926c968f0a4b",
+        "nama": "Ambu-ambu (Kerisik)",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 5,
+        "satuan": "kg",
+        "harga": 40000,
+        "total_nilai": 200000,
+        "updated_at": "2025-11-26 09:33:28"
+    },
+    {
+        "id": "item_6926c9929b2b0",
+        "nama": "Kikil \/ Tunjang Rebus",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 5,
+        "satuan": "kg",
+        "harga": 40000,
+        "total_nilai": 200000,
+        "updated_at": "2025-11-26 09:34:10"
+    },
+    {
+        "id": "item_6926c9ad81fd3",
+        "nama": "Paru Rebus",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 5,
+        "satuan": "kg",
+        "harga": 70000,
+        "total_nilai": 350000,
+        "updated_at": "2025-11-26 09:34:37"
+    },
+    {
+        "id": "item_6926c9cc9a360",
+        "nama": "Ikan Salai (Limbat\/Lele)",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 5,
+        "satuan": "kg",
+        "harga": 100000,
+        "total_nilai": 500000,
+        "updated_at": "2025-11-26 09:35:08"
+    },
+    {
+        "id": "item_6926c9eb0ff7e",
+        "nama": "Ikan Asin Jambal\/Peda",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 5,
+        "satuan": "kg",
+        "harga": 70000,
+        "total_nilai": 350000,
+        "updated_at": "2025-11-26 09:35:39"
+    },
+    {
+        "id": "item_6926ca09b8909",
+        "nama": "Daging Tetelan",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 5,
+        "satuan": "kg",
+        "harga": 80000,
+        "total_nilai": 400000,
+        "updated_at": "2025-11-26 09:36:09"
+    },
+    {
+        "id": "item_6926ca3052769",
+        "nama": "Kerupuk Jangek (Mentah)",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 5,
+        "satuan": "kg",
+        "harga": 120000,
+        "total_nilai": 600000,
+        "updated_at": "2025-11-26 09:36:48"
+    },
+    {
+        "id": "item_6926ca52b2e5b",
+        "nama": "Emping Melinjo",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 4,
+        "satuan": "kg",
+        "harga": 65000,
+        "total_nilai": 260000,
+        "updated_at": "2025-11-26 09:37:22"
+    },
+    {
+        "id": "item_6926ca6f2adb7",
+        "nama": "Teh Bubuk (Teh Talua)",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 4,
+        "satuan": "kg",
+        "harga": 40000,
+        "total_nilai": 160000,
+        "updated_at": "2025-11-26 09:37:51"
+    },
+    {
+        "id": "item_6926ca8dd21e9",
+        "nama": "Bawang Goreng",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 4,
+        "satuan": "kg",
+        "harga": 100000,
+        "total_nilai": 400000,
+        "updated_at": "2025-11-26 09:38:21"
+    },
+    {
+        "id": "item_6926cb692ff62",
+        "nama": "Rendang Daging",
+        "kategori": "Produk Jadi Siap Saji",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 20000,
+        "total_nilai": 20000,
+        "updated_at": "2025-11-26 09:42:01"
+    },
+    {
+        "id": "item_6926cb8a9c073",
+        "nama": "Dendeng (Balado\/Batokok)",
+        "kategori": "Produk Jadi Siap Saji",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 25000,
+        "total_nilai": 25000,
+        "updated_at": "2025-11-26 09:42:34"
+    },
+    {
+        "id": "item_6926cbae5b9a8",
+        "nama": "Gulai Cincang (Lemak)",
+        "kategori": "Produk Jadi Siap Saji",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 25000,
+        "total_nilai": 25000,
+        "updated_at": "2025-11-26 09:43:10"
+    },
+    {
+        "id": "item_6926cbc2dfd1a",
+        "nama": "Gulai Tunjang (Kikil)",
+        "kategori": "Produk Jadi Siap Saji",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 20000,
+        "total_nilai": 20000,
+        "updated_at": "2025-11-26 09:43:30"
+    },
+    {
+        "id": "item_6926cbe15cccf",
+        "nama": "Paru Goreng",
+        "kategori": "Produk Jadi Siap Saji",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 22000,
+        "total_nilai": 22000,
+        "updated_at": "2025-11-26 09:44:01"
+    },
+    {
+        "id": "item_6926cbf72a917",
+        "nama": "Gulai Otak",
+        "kategori": "Produk Jadi Siap Saji",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 22000,
+        "total_nilai": 22000,
+        "updated_at": "2025-11-26 09:44:23"
+    },
+    {
+        "id": "item_6926cc1b7ade0",
+        "nama": "Ayam Gulai",
+        "kategori": "Produk Jadi Siap Saji",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 18000,
+        "total_nilai": 18000,
+        "updated_at": "2025-11-26 09:44:59"
+    },
+    {
+        "id": "item_6926cc3b59feb",
+        "nama": "Ayam Bakar",
+        "kategori": "Produk Jadi Siap Saji",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 20000,
+        "total_nilai": 20000,
+        "updated_at": "2025-11-26 09:45:31"
+    },
+    {
+        "id": "item_6926cc4f4bf01",
+        "nama": "Ayam Pop",
+        "kategori": "Produk Jadi Siap Saji",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 20000,
+        "total_nilai": 20000,
+        "updated_at": "2025-11-26 09:45:51"
+    },
+    {
+        "id": "item_6926cc63628e9",
+        "nama": "Ayam Goreng Bumbu",
+        "kategori": "Produk Jadi Siap Saji",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 23000,
+        "total_nilai": 23000,
+        "updated_at": "2025-11-26 09:46:11"
+    },
+    {
+        "id": "item_6926cc8e50e68",
+        "nama": "Ayam Balado (Merah\/Ijo)",
+        "kategori": "Produk Jadi Siap Saji",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 23000,
+        "total_nilai": 23000,
+        "updated_at": "2025-11-26 09:46:54"
+    },
+    {
+        "id": "item_6926cca85d333",
+        "nama": "Gulai Itiak (Bebek)",
+        "kategori": "Produk Jadi Siap Saji",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 25000,
+        "total_nilai": 25000,
+        "updated_at": "2025-11-26 09:47:20"
+    },
+    {
+        "id": "item_6926cccd57a1f",
+        "nama": "Ikan Kembung Bakar",
+        "kategori": "Produk Jadi Siap Saji",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 20000,
+        "total_nilai": 20000,
+        "updated_at": "2025-11-26 09:47:57"
+    },
+    {
+        "id": "item_6926ccfbca968",
+        "nama": "Gulai Kepala Kakap",
+        "kategori": "Bahan Setengah Jadi",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 60000,
+        "total_nilai": 60000,
+        "updated_at": "2025-11-26 09:48:43"
+    },
+    {
+        "id": "item_6926cd14cf07d",
+        "nama": "Tongkol Asam Padeh",
+        "kategori": "Produk Jadi Siap Saji",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 20000,
+        "total_nilai": 20000,
+        "updated_at": "2025-11-26 09:49:08"
+    },
+    {
+        "id": "item_6926cd3e86b26",
+        "nama": "Udang Balado\/Gulai",
+        "kategori": "Produk Jadi Siap Saji",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 25000,
+        "total_nilai": 25000,
+        "updated_at": "2025-11-26 09:49:50"
+    },
+    {
+        "id": "item_6926cd515cdaa",
+        "nama": "Cumi Gulai (Isi Tahu)",
+        "kategori": "Produk Jadi Siap Saji",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 30000,
+        "total_nilai": 30000,
+        "updated_at": "2025-11-26 09:50:09"
+    },
+    {
+        "id": "item_6926ceafc931f",
+        "nama": "Kertas Nasi Coklat (Laminasi)",
+        "kategori": "Packaging",
+        "qty": 50,
+        "satuan": "pcs",
+        "harga": 22000,
+        "total_nilai": 1100000,
+        "updated_at": "2025-11-26 09:55:59"
+    },
+    {
+        "id": "item_6926cee45b917",
+        "nama": "Daun Pisang",
+        "kategori": "Packaging",
+        "qty": 50,
+        "satuan": "pcs",
+        "harga": 8000,
+        "total_nilai": 400000,
+        "updated_at": "2025-11-26 09:56:52"
+    },
+    {
+        "id": "item_6926cf13dd25f",
+        "nama": "Karet Gelang",
+        "kategori": "Packaging",
+        "qty": 50,
+        "satuan": "pcs",
+        "harga": 3000,
+        "total_nilai": 150000,
+        "updated_at": "2025-11-26 09:57:39"
+    },
+    {
+        "id": "item_6926d238ad7ff",
+        "nama": "Etalase Kaca(Aluminium)",
+        "kategori": "Bahan Operasional",
+        "qty": 1,
+        "satuan": "pcs",
+        "harga": 2500000,
+        "total_nilai": 2500000,
+        "updated_at": "2025-11-26 10:11:14"
+    },
+    {
+        "id": "item_6926d28b2edfb",
+        "nama": "piring saji",
+        "kategori": "Bahan Operasional",
+        "qty": 50,
+        "satuan": "pcs",
+        "harga": 25000,
+        "total_nilai": 1250000,
+        "updated_at": "2025-11-26 10:12:27"
     }
 ]
