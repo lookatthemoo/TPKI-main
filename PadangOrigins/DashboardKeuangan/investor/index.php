@@ -1,12 +1,17 @@
 <?php
 session_start();
+// --- CONFIG DATA ---
 $filePortfolio = '../data/portfolio.json';
 $fileRekening = '../data/rekening.json';
 
-// Ambil Data Portofolio
-$myPortfolio = file_exists($filePortfolio) ? json_decode(file_get_contents($filePortfolio), true) : [];
+// Cek Jam Bursa (Senin-Jumat, 09:00 - 16:00)
+$jamSekarang = (int)date('H');
+$hariSekarang = date('N'); 
+$isMarketOpen = ($hariSekarang <= 5 && $jamSekarang >= 9 && $jamSekarang < 16);
+// $isMarketOpen = true; // Uncomment kalau mau testing malam-malam
 
-// Ambil Saldo Mandiri
+// Ambil Data
+$myPortfolio = file_exists($filePortfolio) ? json_decode(file_get_contents($filePortfolio), true) : [];
 $rekeningData = file_exists($fileRekening) ? json_decode(file_get_contents($fileRekening), true) : [];
 $saldoMandiri = 0;
 foreach ($rekeningData as $rek) {
@@ -21,428 +26,348 @@ foreach ($rekeningData as $rek) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading Floor - Financial AI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Pro Trading Desk - PadangOrigins</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* TEMA PUTIH (LIGHT MODE) */
-            --bg-body: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --green-profit: #10b981;
-            --red-loss: #ef4444;
-            --accent: #00695c; /* Warna Teal PadangOrigins */
-            --accent-hover: #004d40;
+            --bg-body: #f0f3f9;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --border: #e2e8f0;
+            --accent: #2962ff;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); padding-bottom: 50px; }
-        
+        body { font-family: 'Manrope', sans-serif; background: var(--bg-body); color: var(--text-primary); padding-bottom: 60px; }
+
+        /* NAVBAR */
         .navbar { 
-            background: var(--card-bg); display: flex; justify-content: space-between; 
-            padding: 1.2rem 2rem; border-bottom: 1px solid var(--border-color); align-items: center; 
-            position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            background: var(--bg-card); padding: 1rem 2rem; 
+            border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 50;
         }
-        .logo { font-size: 1.4rem; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; }
+        .rdn-box { text-align: right; }
+        .rdn-val { font-size: 1.1rem; font-weight: 700; color: #16a34a; }
+
+        /* GRID UTAMA */
+        .trading-container {
+            display: grid;
+            grid-template-columns: 1fr 380px; /* Chart Lebar, Portofolio Sempit */
+            gap: 1.5rem;
+            padding: 1.5rem;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* CHART SECTION */
+        .chart-wrapper {
+            background: white; border-radius: 16px; border: 1px solid var(--border);
+            overflow: hidden; display: flex; flex-direction: column; min-height: 600px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* PORTFOLIO SECTION */
+        .portfolio-wrapper {
+            background: white; border-radius: 16px; border: 1px solid var(--border);
+            padding: 1.5rem; overflow-y: auto; display: flex; flex-direction: column;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); height: fit-content;
+        }
+
+        .action-buttons {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem;
+        }
+        .btn-trade {
+            padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; color: white; transition: 0.2s;
+        }
+        .btn-buy { background: #16a34a; }
+        .btn-buy:hover { background: #15803d; }
+        .btn-sell { background: #dc2626; }
+        .btn-sell:hover { background: #b91c1c; }
+
+        .port-item {
+            padding: 12px; border: 1px solid #f1f5f9; border-radius: 10px; margin-bottom: 10px; background: #f8fafc;
+        }
+        .port-item h4 { display: flex; justify-content: space-between; margin-bottom: 5px; color: var(--text-primary); }
+
+        /* HEATMAP SECTION */
+        .heatmap-container {
+            padding: 0 1.5rem 2rem 1.5rem;
+        }
+        .heatmap-wrapper {
+            background: white; border-radius: 16px; border: 1px solid var(--border);
+            overflow: hidden; padding: 10px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* MODAL */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-content { background: white; padding: 2rem; border-radius: 20px; width: 420px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); animation: zoomIn 0.2s ease-out; }
+        @keyframes zoomIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
-        .balance-box { text-align: right; }
-        .balance-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
-        .balance-val { font-size: 1.3rem; font-weight: 800; color: var(--text-main); }
-
-        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
-
-        /* Market List */
-        .market-header { margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-        .ticker-card {
-            background: var(--card-bg); padding: 1.2rem; border-radius: 16px; margin-bottom: 1rem;
-            display: flex; justify-content: space-between; align-items: center; 
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; 
-            border: 1px solid var(--border-color); box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-        .ticker-card:hover { 
-            transform: translateY(-4px); 
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); 
-            border-color: var(--accent); 
-        }
-        .stock-code { font-weight: 800; font-size: 1.1rem; color: var(--text-main); }
-        .stock-name { font-size: 0.85rem; color: var(--text-muted); }
-        .stock-price { font-weight: 700; font-size: 1.1rem; text-align: right; }
-        .stock-change { font-size: 0.85rem; text-align: right; font-weight: 600; }
-        .up { color: var(--green-profit); }
-        .down { color: var(--red-loss); }
-
-        /* Portfolio Section */
-        .portfolio-section { 
-            background: var(--card-bg); padding: 1.5rem; border-radius: 20px; 
-            height: fit-content; border: 1px solid var(--border-color); 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); position: sticky; top: 100px;
-        }
-        .port-header { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        .port-item { margin-bottom: 1.5rem; background: #f1f5f9; padding: 1rem; border-radius: 12px; }
-        .port-row { display: flex; justify-content: space-between; margin-bottom: 0.4rem; }
-        .lbl { color: var(--text-muted); font-size: 0.9rem; }
-        .val { font-weight: 600; color: var(--text-main); }
-        .pnl-val { font-weight: 800; }
-
-        /* Tombol Aksi */
-        .btn-action-group { display: flex; gap: 0.5rem; margin-top: 1rem; }
-        .btn-sell { 
-            flex: 1; padding: 0.6rem; background: var(--card-bg); border: 2px solid var(--red-loss); 
-            color: var(--red-loss); border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; 
-        }
-        .btn-sell:hover { background: var(--red-loss); color: white; }
-
-        /* Modal */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-        .modal-box { 
-            background: var(--card-bg); padding: 2rem; border-radius: 24px; width: 420px; 
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); border: 1px solid var(--border-color);
-            animation: slideUp 0.3s ease-out;
-        }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
-        .modal-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--accent); }
         .form-group { margin-bottom: 1.2rem; }
-        .form-group label { display: block; color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 600; }
-        .form-group input { 
-            width: 100%; padding: 1rem; background: #f8fafc; border: 2px solid var(--border-color); 
-            color: var(--text-main); border-radius: 12px; font-size: 1.1rem; font-weight: 600; outline: none; transition: 0.2s;
-        }
+        .form-group label { display: block; font-size: 0.85rem; color: #64748b; margin-bottom: 6px; font-weight: 600; }
+        .form-group input { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-weight: 700; font-size: 1rem; color: #334155; outline: none; transition: 0.2s; }
         .form-group input:focus { border-color: var(--accent); }
         
-        .btn-confirm { width: 100%; padding: 1.2rem; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 1rem; margin-top: 1rem; transition: 0.3s; }
-        .btn-buy-confirm { background: var(--accent); color: white; box-shadow: 0 4px 12px rgba(0, 105, 92, 0.3); }
-        .btn-buy-confirm:hover { background: var(--accent-hover); transform: translateY(-2px); }
-        .btn-sell-confirm { background: var(--red-loss); color: white; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
-        .btn-sell-confirm:hover { background: #dc2626; transform: translateY(-2px); }
-        
-        .btn-close { position: absolute; top: 1.5rem; right: 1.5rem; cursor: pointer; color: var(--text-muted); font-size: 1.2rem; background: none; border: none; }
+        .alert-float { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); padding: 12px 24px; border-radius: 50px; color: white; font-weight: 600; z-index: 1000; display: none; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
 
-        /* Alert Box */
-        .alert-box { 
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
-            padding: 1rem 2rem; border-radius: 50px; color: white; font-weight: 600; 
-            z-index: 1000; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); display: none;
-            animation: fadeInDown 0.5s ease;
-        }
-        @keyframes fadeInDown { from { top: -50px; opacity: 0; } to { top: 20px; opacity: 1; } }
-        .alert-error { background: var(--red-loss); }
-        .alert-success { background: var(--green-profit); }
-
-        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+        @media (max-width: 1024px) { .trading-container { grid-template-columns: 1fr; height: auto; } }
     </style>
 </head>
 <body>
 
-    <div id="alertError" class="alert-box alert-error">⚠️ Saldo Rekening Mandiri Tidak Cukup!</div>
-    <div id="alertSuccess" class="alert-box alert-success">✅ Transaksi Berhasil!</div>
+    <div id="alertSuccess" class="alert-float" style="background: #16a34a;">✅ Order Berhasil!</div>
+    <div id="alertFail" class="alert-float" style="background: #dc2626;">⚠️ Transaksi Gagal / Saldo Kurang</div>
 
     <nav class="navbar">
-        <div class="logo">Financial AI <span style="font-weight:300;">Trade</span></div>
-        <div class="balance-box">
-            <div class="balance-label">Saldo RDN (Mandiri)</div>
-            <div class="balance-val">Rp <?= number_format($saldoMandiri, 0, ',', '.'); ?></div>
+        <div class="logo">Antara 33 <span style="color:#2962ff;">FINANCE</span></div>
+        <div class="rdn-box">
+            <small style="color:#64748b; font-weight: 600;">Saldo RDN (Mandiri)</small>
+            <div class="rdn-val">Rp <?= number_format($saldoMandiri, 0, ',', '.'); ?></div>
         </div>
     </nav>
-    <div style="padding: 1rem 2rem; background: #fff; border-bottom: 1px solid #eee;">
-        <a href="../../DashboardKeuangan/index.php" style="color: var(--text-muted); text-decoration: none; font-weight:600; font-size: 0.9rem;">← Kembali ke Dashboard</a>
+    <div style="padding: 10px 2rem; font-size: 0.85rem; background:white; border-bottom:1px solid #eee;">
+        <a href="../../home/index.php" style="text-decoration:none; color: #64748b; font-weight: 600;">← Kembali ke Dashboard Utama</a>
     </div>
 
-    <main class="container">
+    <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+        {
+        "symbols": [
+            { "proName": "IDX:COMPOSITE", "title": "IHSG" },
+            { "proName": "IDX:BBCA", "title": "BCA" },
+            { "proName": "IDX:BBRI", "title": "BRI" },
+            { "proName": "IDX:TLKM", "title": "Telkom" },
+            { "proName": "IDX:GOTO", "title": "GoTo" },
+            { "proName": "IDX:ASII", "title": "Astra" },
+            { "proName": "IDX:ANTM", "title": "Aneka Tambang" },
+            { "proName": "FX_IDC:USDIDR", "title": "USD/IDR" }
+        ],
+        "showSymbolLogo": true,
+        "colorTheme": "light",
+        "isTransparent": false,
+        "displayMode": "adaptive",
+        "locale": "id"
+        }
+        </script>
+    </div>
+
+    <main class="trading-container">
         
-        <section>
-            <div class="market-header">
-                <h2 style="color: var(--text-main);">🇮🇩 IHSG Market Live</h2>
-                <div style="display:flex; align-items:center; gap:5px;">
-                    <span style="height:10px; width:10px; background:var(--green-profit); border-radius:50%; display:inline-block; animation: pulse 1.5s infinite;"></span>
-                    <span style="color:var(--green-profit); font-weight:600; font-size:0.9rem;">Market Open</span>
+        <div class="chart-wrapper">
+            <div class="tradingview-widget-container" style="height:100%; width:100%">
+                <div id="tradingview_chart" style="height:100%; width:100%"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                <script type="text/javascript">
+                new TradingView.widget({
+                    "autosize": true,
+                    "symbol": "IDX:BBCA", 
+                    "interval": "D",
+                    "timezone": "Asia/Jakarta",
+                    "theme": "light",
+                    "style": "1",
+                    "locale": "id",
+                    "toolbar_bg": "#f1f3f6",
+                    "enable_publishing": false,
+                    "allow_symbol_change": true, 
+                    "details": true,
+                    "hotlist": true,
+                    "calendar": true,
+                    "studies": [
+                        "RSI@tv-basicstudies",      
+                        "MACD@tv-basicstudies",     
+                        "MASimple@tv-basicstudies"  
+                    ],
+                    "container_id": "tradingview_chart"
+                });
+                </script>
+            </div>
+        </div>
+
+        <div class="portfolio-wrapper">
+            
+            <div style="margin-bottom: 1.5rem;">
+                <h3 style="margin-bottom: 10px; font-weight: 800;">Panel Order</h3>
+                <p style="font-size:0.85rem; color:#64748b; margin-bottom:1rem;">
+                    Status Pasar: 
+                    <?php if($isMarketOpen): ?>
+                        <span style="color:#16a34a; font-weight:bold; background: #dcfce7; padding: 2px 8px; border-radius: 4px;">● MARKET OPEN</span>
+                    <?php else: ?>
+                        <span style="color:#dc2626; font-weight:bold; background: #fee2e2; padding: 2px 8px; border-radius: 4px;">● MARKET CLOSED</span>
+                    <?php endif; ?>
+                </p>
+
+                <div class="action-buttons">
+                    <button class="btn-trade btn-buy" onclick="openModal('buy')" <?= !$isMarketOpen ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>BELI (Buy)</button>
+                    <button class="btn-trade btn-sell" onclick="openModal('sell')" <?= !$isMarketOpen ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>JUAL (Sell)</button>
+                </div>
+                <small style="color:#64748b; font-size:0.75rem;">*Lihat harga di chart sebelah kiri sebelum order.</small>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
+                    {
+                    "interval": "1D",
+                    "width": "100%",
+                    "isTransparent": true,
+                    "height": "300",
+                    "symbol": "IDX:BBCA",
+                    "showIntervalTabs": false,
+                    "displayMode": "single",
+                    "locale": "id",
+                    "colorTheme": "light"
+                    }
+                    </script>
                 </div>
             </div>
 
-            <div id="ticker-container">
-                </div>
-        </section>
+            <hr style="border:0; border-top:1px solid #eee; margin-bottom:1rem;">
 
-        <aside class="portfolio-section">
-            <div class="port-header">
-                <span>💼 Portofolio Saya</span>
-                <small style="font-weight:400; color:var(--text-muted);"><?= count($myPortfolio); ?> Emiten</small>
-            </div>
+            <h3 style="margin-bottom: 1rem; font-weight: 800;">Portofolio Saya</h3>
             
             <?php if(empty($myPortfolio)): ?>
-                <div style="text-align:center; padding: 2rem 0; color: var(--text-muted);">
-                    <div style="font-size:2rem; margin-bottom:0.5rem;">📉</div>
-                    <p>Belum ada aset saham.</p>
+                <div style="text-align:center; color:#94a3b8; margin-top:20px; padding: 20px; border: 2px dashed #e2e8f0; border-radius: 10px;">
+                    📉<br>Belum ada aset saham.
                 </div>
             <?php else: ?>
                 <?php foreach($myPortfolio as $saham): ?>
-                    <div class="port-item" id="port-<?= $saham['kode']; ?>" data-avg="<?= $saham['avg_price']; ?>" data-lot="<?= $saham['lot']; ?>">
-                        <div class="port-row">
-                            <span style="font-weight:800; font-size:1.1rem; color:var(--text-main);"><?= $saham['kode']; ?></span>
-                            <span class="lbl" style="background: white; padding: 2px 8px; border-radius: 4px; border: 1px solid #eee;"><?= $saham['lot']; ?> Lot</span>
+                    <div class="port-item">
+                        <h4>
+                            <span style="font-weight: 800; color: var(--accent);"><?= $saham['kode']; ?></span>
+                            <span style="font-size:0.8rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; color: #475569;"><?= $saham['lot']; ?> Lot</span>
+                        </h4>
+                        <div style="display:flex; justify-content:space-between; font-size:0.85rem; color:#64748b; margin-top: 5px;">
+                            <span>Avg Price:</span>
+                            <span style="font-weight: 600; color: #334155;">Rp <?= number_format($saham['avg_price']); ?></span>
                         </div>
-                        <div class="port-row">
-                            <span class="lbl">Avg Price</span>
-                            <span class="val">Rp <?= number_format($saham['avg_price']); ?></span>
-                        </div>
-                        <div class="port-row">
-                            <span class="lbl">Market Price</span>
-                            <span class="val cur-price-display">...</span>
-                        </div>
-                        <div class="port-row" style="margin-top: 5px; padding-top: 5px; border-top: 1px dashed #cbd5e1;">
-                            <span class="lbl">Floating P/L</span>
-                            <span class="pnl-val">...</span>
-                        </div>
-                        
-                        <div class="btn-action-group">
-                            <button class="btn-sell" onclick="openSellModal('<?= $saham['kode']; ?>', <?= $saham['lot']; ?>)">JUAL (Sell)</button>
+                        <div style="margin-top:8px; font-size:0.8rem; text-align:right;">
+                            <a href="#" onclick="alert('Silakan cek chart untuk update harga <?= $saham['kode']; ?> terkini')" style="text-decoration:none; color:#2962ff; font-weight: 600;">⚡ Cek Realtime</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
 
-        </aside>
-
+        </div>
     </main>
 
-    <div id="buyModal" class="modal-overlay">
-        <div class="modal-box" style="position:relative;">
-            <button class="btn-close" onclick="closeModal('buyModal')">✕</button>
-            <div class="modal-title">Beli Saham <span id="buyStockCode" style="color:var(--accent);"></span></div>
+    <section class="heatmap-container">
+        <h3 style="margin-bottom: 1rem; font-weight: 800; color: var(--text-primary);">Market Overview (Heatmap)</h3>
+        <div class="heatmap-wrapper">
+            <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js" async>
+            {
+            "exchanges": [],
+            "dataSource": "IDX",
+            "grouping": "sector",
+            "blockSize": "market_cap_basic",
+            "blockColor": "change",
+            "locale": "id",
+            "symbolUrl": "",
+            "colorTheme": "light",
+            "hasTopBar": false,
+            "isDataSetEnabled": false,
+            "isZoomEnabled": true,
+            "hasSymbolTooltip": true,
+            "width": "100%",
+            "height": "500"
+            }
+            </script>
+            </div>
+        </div>
+    </section>
+
+    <div id="modalTrade" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modalTitle" style="margin-bottom: 1.5rem; font-weight: 800;">Order Saham</h3>
             
-            <form action="proses_beli_saham.php" method="POST">
-                <input type="hidden" name="kode_saham" id="inputKodeBuy">
-                <input type="hidden" name="harga_saat_ini" id="inputHargaBuy">
+            <form id="formTrade" method="POST">
+                <input type="hidden" name="tipe_order" id="tipeOrder"> 
+                
+                <div class="form-group">
+                    <label>Kode Saham</label>
+                    <input type="text" name="kode_saham" id="inputKode" placeholder="Contoh: BBCA" required style="text-transform:uppercase; letter-spacing: 1px;">
+                </div>
 
                 <div class="form-group">
-                    <label>Harga Pasar Saat Ini</label>
-                    <input type="text" id="displayHargaBuy" readonly style="background: #e2e8f0; color: var(--text-muted);">
+                    <label>Harga Saat Ini (Lihat Chart)</label>
+                    <input type="number" name="harga_saat_ini" id="inputHarga" placeholder="Masukkan harga real di chart" required oninput="calcTotal()">
+                    <small style="color:#ef4444; font-size:0.75rem; font-weight: 600;">*Wajib isi sesuai harga chart agar valid!</small>
                 </div>
 
                 <div class="form-group">
                     <label>Jumlah Lot (1 Lot = 100 Lbr)</label>
-                    <input type="number" name="jumlah_lot" id="inputLotBuy" min="1" value="1" oninput="hitungTotalBuy()" required>
+                    <input type="number" name="jumlah_lot" id="inputLot" value="1" min="1" required oninput="calcTotal()">
                 </div>
 
-                <div class="form-group" style="background: #f0fdf4; padding: 1rem; border-radius: 12px; border: 1px solid #bbf7d0;">
-                    <label style="color: #166534;">Estimasi Total Bayar</label>
-                    <div id="totalBayarDisplay" style="font-size: 1.5rem; font-weight: 800; color: #166534;">Rp 0</div>
+                <div style="background:#f1f5f9; padding:15px; border-radius:12px; margin-top:15px; border: 1px solid #e2e8f0;">
+                    <span style="font-size:0.85rem; color:#64748b; font-weight: 600; text-transform: uppercase;">Total Estimasi</span>
+                    <div id="totalVal" style="font-size:1.8rem; font-weight:800; color:#0f172a; margin-top: 5px;">Rp 0</div>
                 </div>
 
-                <button type="submit" class="btn-confirm btn-buy-confirm">KONFIRMASI BELI</button>
+                <button type="submit" id="btnSubmit" style="width:100%; padding:15px; margin-top:20px; border:none; border-radius:12px; font-weight:800; color:white; cursor:pointer; font-size: 1rem; transition: 0.3s; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">CONFIRM</button>
             </form>
-        </div>
-    </div>
-
-    <div id="sellModal" class="modal-overlay">
-        <div class="modal-box" style="position:relative;">
-            <button class="btn-close" onclick="closeModal('sellModal')">✕</button>
-            <div class="modal-title">Jual Saham <span id="sellStockCode" style="color:var(--red-loss);"></span></div>
-            
-            <form action="proses_jual_saham.php" method="POST">
-                <input type="hidden" name="kode_saham" id="inputKodeSell">
-                <input type="hidden" name="harga_jual" id="inputHargaSell">
-                <input type="hidden" name="jumlah_lot" id="inputLotSellHidden">
-
-                <div class="form-group">
-                    <label>Harga Jual (Market Price)</label>
-                    <input type="text" id="displayHargaSell" readonly style="background: #e2e8f0;">
-                </div>
-
-                <div class="form-group">
-                    <label>Lot yang Dimiliki</label>
-                    <input type="text" id="displayLotSell" readonly style="background: #e2e8f0;">
-                </div>
-
-                <div class="form-group" style="background: #fef2f2; padding: 1rem; border-radius: 12px; border: 1px solid #fecaca;">
-                    <label style="color: #991b1b;">Total Uang Diterima (Termasuk Profit/Loss)</label>
-                    <div id="totalTerimaDisplay" style="font-size: 1.5rem; font-weight: 800; color: #991b1b;">Rp 0</div>
-                    <small style="display:block; margin-top:5px; color:#7f1d1d;">*Dana akan langsung masuk ke Saldo Mandiri</small>
-                </div>
-
-                <button type="submit" class="btn-confirm btn-sell-confirm">KONFIRMASI JUAL</button>
-            </form>
+            <div style="text-align:center; margin-top:15px;">
+                <span onclick="closeModal()" style="cursor:pointer; color:#64748b; font-size:0.9rem; font-weight: 600;">Batal</span>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- DATA & LOGIC ---
-        const stocks = [
-            { code: "BBCA", name: "Bank Central Asia Tbk", price: 9800 },
-            { code: "BBRI", name: "Bank Rakyat Indonesia", price: 5600 },
-            { code: "BMRI", name: "Bank Mandiri Persero", price: 6100 },
-            { code: "TLKM", name: "Telkom Indonesia", price: 3800 },
-            { code: "ASII", name: "Astra International", price: 5200 },
-            { code: "GOTO", name: "GoTo Gojek Tokopedia", price: 82 },
-            { code: "UNVR", name: "Unilever Indonesia", price: 3400 },
-            { code: "ICBP", name: "Indofood CBP", price: 11200 }
-        ];
+        function openModal(type) {
+            const modal = document.getElementById('modalTrade');
+            const form = document.getElementById('formTrade');
+            const btn = document.getElementById('btnSubmit');
+            const title = document.getElementById('modalTitle');
+            const inputType = document.getElementById('tipeOrder');
 
-        let livePrices = {};
+            inputType.value = type;
+            modal.style.display = 'flex';
 
-        // 1. Render Ticker
-        const container = document.getElementById('ticker-container');
-        stocks.forEach(s => {
-            livePrices[s.code] = s.price;
-            const div = document.createElement('div');
-            div.className = 'ticker-card';
-            div.onclick = () => openBuyModal(s.code);
-            div.innerHTML = `
-                <div>
-                    <div class="stock-code">${s.code}</div>
-                    <div class="stock-name">${s.name}</div>
-                </div>
-                <div>
-                    <div class="stock-price" id="price-${s.code}">Rp ${s.price.toLocaleString()}</div>
-                    <div class="stock-change" id="change-${s.code}">0.00%</div>
-                </div>
-            `;
-            container.appendChild(div);
-        });
-
-        // 2. Realtime Simulation
-        setInterval(() => {
-            stocks.forEach(s => {
-                let volatility = s.price * 0.005; 
-                let change = (Math.random() * volatility * 2) - volatility;
-                let newPrice = Math.floor(livePrices[s.code] + change);
-                if(newPrice < 50) newPrice = 50; 
-
-                livePrices[s.code] = newPrice;
-                let percent = ((newPrice - s.price) / s.price) * 100;
-
-                // Update UI Ticker
-                const elPrice = document.getElementById(`price-${s.code}`);
-                const elChange = document.getElementById(`change-${s.code}`);
-                
-                elPrice.innerText = "Rp " + newPrice.toLocaleString();
-                elChange.innerText = percent.toFixed(2) + "%";
-                
-                if(percent >= 0) {
-                    elChange.className = "stock-change up";
-                    elPrice.style.color = "var(--green-profit)";
-                    elChange.innerText = "▲ " + elChange.innerText;
-                } else {
-                    elChange.className = "stock-change down";
-                    elPrice.style.color = "var(--red-loss)";
-                    elChange.innerText = "▼ " + elChange.innerText;
-                }
-
-                updatePortfolio(s.code, newPrice);
-                updateModals(s.code, newPrice);
-            });
-        }, 1500);
-
-        function updatePortfolio(code, currentPrice) {
-            const portItem = document.getElementById(`port-${code}`);
-            if(portItem) {
-                const avgPrice = parseFloat(portItem.getAttribute('data-avg'));
-                const lot = parseFloat(portItem.getAttribute('data-lot'));
-                const lembar = lot * 100;
-
-                // Update Display
-                portItem.querySelector('.cur-price-display').innerText = "Rp " + currentPrice.toLocaleString();
-
-                const pnl = (currentPrice - avgPrice) * lembar;
-                const pnlPercent = ((currentPrice - avgPrice) / avgPrice) * 100;
-                const pnlEl = portItem.querySelector('.pnl-val');
-                
-                let sign = pnl >= 0 ? "+" : "";
-                pnlEl.innerText = `${sign}Rp ${Math.abs(pnl).toLocaleString()} (${pnlPercent.toFixed(2)}%)`;
-                pnlEl.style.color = pnl >= 0 ? "var(--green-profit)" : "var(--red-loss)";
+            if(type === 'buy') {
+                title.innerText = "Beli Saham";
+                title.style.color = "#16a34a";
+                form.action = "proses_beli_saham.php";
+                btn.style.backgroundColor = "#16a34a";
+                btn.innerText = "BELI SEKARANG";
+            } else {
+                title.innerText = "Jual Saham";
+                title.style.color = "#dc2626";
+                form.action = "proses_jual_saham.php"; 
+                btn.style.backgroundColor = "#dc2626";
+                btn.innerText = "JUAL SEKARANG";
             }
         }
 
-        function updateModals(code, price) {
-            // Update Buy Modal jika terbuka
-            if(document.getElementById('buyModal').style.display === 'flex' && document.getElementById('buyStockCode').innerText === code) {
-                document.getElementById('inputHargaBuy').value = price;
-                document.getElementById('displayHargaBuy').value = "Rp " + price.toLocaleString();
-                hitungTotalBuy();
-            }
-            // Update Sell Modal jika terbuka
-            if(document.getElementById('sellModal').style.display === 'flex' && document.getElementById('sellStockCode').innerText === code) {
-                document.getElementById('inputHargaSell').value = price;
-                document.getElementById('displayHargaSell').value = "Rp " + price.toLocaleString();
-                hitungTotalSell();
-            }
+        function closeModal() {
+            document.getElementById('modalTrade').style.display = 'none';
         }
 
-        // --- MODAL FUNCTIONS ---
-        function openBuyModal(code) {
-            const price = livePrices[code];
-            document.getElementById('buyStockCode').innerText = code;
-            document.getElementById('inputKodeBuy').value = code;
-            document.getElementById('inputHargaBuy').value = price;
-            document.getElementById('displayHargaBuy').value = "Rp " + price.toLocaleString();
-            document.getElementById('inputLotBuy').value = 1;
-            hitungTotalBuy();
-            document.getElementById('buyModal').style.display = 'flex';
+        function calcTotal() {
+            const p = parseInt(document.getElementById('inputHarga').value) || 0;
+            const l = parseInt(document.getElementById('inputLot').value) || 0;
+            const total = p * l * 100;
+            document.getElementById('totalVal').innerText = "Rp " + total.toLocaleString();
         }
 
-        function openSellModal(code, lot) {
-            const price = livePrices[code];
-            document.getElementById('sellStockCode').innerText = code;
-            document.getElementById('inputKodeSell').value = code;
-            document.getElementById('inputHargaSell').value = price;
-            document.getElementById('inputLotSellHidden').value = lot;
-            
-            document.getElementById('displayHargaSell').value = "Rp " + price.toLocaleString();
-            document.getElementById('displayLotSell').value = lot + " Lot (" + (lot*100) + " Lembar)";
-            
-            hitungTotalSell();
-            document.getElementById('sellModal').style.display = 'flex';
-        }
-
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-        function hitungTotalBuy() {
-            const harga = parseInt(document.getElementById('inputHargaBuy').value);
-            const lot = parseInt(document.getElementById('inputLotBuy').value);
-            const total = harga * lot * 100;
-            document.getElementById('totalBayarDisplay').innerText = "Rp " + total.toLocaleString();
-        }
-
-        function hitungTotalSell() {
-            const harga = parseInt(document.getElementById('inputHargaSell').value);
-            const lot = parseInt(document.getElementById('inputLotSellHidden').value);
-            const total = harga * lot * 100;
-            document.getElementById('totalTerimaDisplay').innerText = "Rp " + total.toLocaleString();
-        }
-
-        // --- URL PARAMETER HANDLING (ERROR MESSAGE) ---
+        // Handle Alert Status
         const urlParams = new URLSearchParams(window.location.search);
-        if(urlParams.get('status') === 'gagal_saldo') {
-            const alertBox = document.getElementById('alertError');
-            alertBox.style.display = 'block';
-            setTimeout(() => { alertBox.style.display = 'none'; }, 4000);
-            // Hapus parameter agar tidak muncul terus saat refresh
+        if(urlParams.get('status') === 'sukses_beli' || urlParams.get('status') === 'sukses_jual') {
+            document.getElementById('alertSuccess').style.display = 'block';
+            setTimeout(() => document.getElementById('alertSuccess').style.display = 'none', 3000);
             window.history.replaceState(null, null, window.location.pathname);
-        } else if(urlParams.get('status') === 'sukses_beli' || urlParams.get('status') === 'sukses_jual') {
-            const alertBox = document.getElementById('alertSuccess');
-            if(urlParams.get('status') === 'sukses_jual') alertBox.innerText = "✅ Berhasil Menjual Saham & Menarik Dana!";
-            alertBox.style.display = 'block';
-            setTimeout(() => { alertBox.style.display = 'none'; }, 4000);
+        } else if(urlParams.get('status')) {
+            document.getElementById('alertFail').style.display = 'block';
+            setTimeout(() => document.getElementById('alertFail').style.display = 'none', 3000);
             window.history.replaceState(null, null, window.location.pathname);
         }
 
         window.onclick = function(e) {
-            if (e.target.classList.contains('modal-overlay')) {
-                e.target.style.display = 'none';
+            if (e.target.className === 'modal-overlay') {
+                closeModal();
             }
         }
-        
-        // Keyframes for Pulse Animation
-        const styleSheet = document.createElement("style");
-        styleSheet.innerText = `
-            @keyframes pulse {
-                0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-                70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-                100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-            }
-        `;
-        document.head.appendChild(styleSheet);
     </script>
 </body>
 </html>

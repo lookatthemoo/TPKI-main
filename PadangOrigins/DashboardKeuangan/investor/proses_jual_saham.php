@@ -5,13 +5,22 @@ $fileRekening = '../data/rekening.json';
 $fileTransaksi = '../data/transaksi.json'; // Menggunakan transaksi.json untuk pencatatan uang masuk
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $kodeSaham = $_POST['kode_saham'];
-    $hargaJual = (int)$_POST['harga_jual'];
-    $lotJual   = (int)$_POST['jumlah_lot'];
+    // --- BAGIAN YANG DIUBAH MULAI DARI SINI ---
+    $kodeSaham = strtoupper($_POST['kode_saham']); 
+
+    // Cek nama inputan form (karena form TradingView pakai name="harga_saat_ini")
+    if (isset($_POST['harga_saat_ini'])) {
+        $hargaJual = (int)$_POST['harga_saat_ini'];
+    } else {
+        $hargaJual = (int)$_POST['harga_jual']; // Jaga-jaga kalau pakai form lama
+    }
+
+    $lotJual = (int)$_POST['jumlah_lot'];
+    // --- BATAS PERUBAHAN ---
 
     // Validasi dasar
     if ($lotJual <= 0 || $hargaJual <= 0) {
-        header("Location: index.php");
+        header("Location: index.php?status=error");
         exit();
     }
 
@@ -26,19 +35,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     foreach ($portfolioData as $saham) {
         if ($saham['kode'] === $kodeSaham) {
-            // Karena kita menjual semua lot yang dipilih (logika simplifikasi: jual semua posisi di saham tsb)
-            // Jika ingin jual parsial, kurangi lot-nya. Di sini kita asumsikan jual semua lot yang ada di modal.
-            // Namun, inputan mengambil total lot yang dimiliki. Jadi saham ini akan hilang dari list.
+            // Logika: Menjual semua lot yang dipilih. Saham ini dihapus dari list portfolio.
             $found = true;
-            continue; // Jangan masukkan ke array baru (artinya dihapus)
+            continue; // Skip (hapus) saham ini dari array baru
         }
         $newPortfolio[] = $saham;
     }
 
     if (!$found) {
+        // Jika saham tidak ditemukan, hentikan proses
         die("Error: Saham tidak ditemukan di portofolio.");
     }
 
+    // Simpan portofolio baru (tanpa saham yang dijual)
     file_put_contents($filePortfolio, json_encode($newPortfolio, JSON_PRETTY_PRINT));
 
     // 3. Update Rekening (Tambah Saldo Mandiri)
@@ -58,14 +67,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // 4. Catat Transaksi (Pemasukan)
-    // Kita catat sebagai "pendapatan" agar masuk di grafik dashboard utama
     $transaksiData = file_exists($fileTransaksi) ? json_decode(file_get_contents($fileTransaksi), true) : [];
     $transaksiData[] = [
         'id' => uniqid(),
         'tanggal' => date('Y-m-d'),
-        'tipe' => 'pendapatan', // Tipe pendapatan agar menambah kas di dashboard utama
+        'tipe' => 'pendapatan', // Masuk sebagai pendapatan agar kas bertambah di dashboard
         'kategori' => 'Return Investasi',
-        'deskripsi' => "Jual $lotJual Lot $kodeSaham @ $hargaJual",
+        'deskripsi' => "Jual $lotJual Lot $kodeSaham @ " . number_format($hargaJual, 0, ',', '.'),
         'jumlah' => $totalTerima
     ];
     file_put_contents($fileTransaksi, json_encode($transaksiData, JSON_PRETTY_PRINT));
