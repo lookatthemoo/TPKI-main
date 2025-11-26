@@ -25,5 +25,24 @@
         "kategori": "Return Investasi",
         "deskripsi": "Jual 20 Lot BBCA @ 9775",
         "jumlah": 19550000
+    },
+    {
+        "id": "order_69274b1df1037",
+        "tanggal": "2025-11-26 18:46:53",
+        "tipe": "pendapatan",
+        "status": "Telah Diambil",
+        "jumlah": 7500000,
+        "akun_sumber": "Customer",
+        "akun_tujuan": "SeaBank",
+        "deskripsi": "Order (budi): 300x Gulai Cincang",
+        "pelaku": "System",
+        "items": [
+            {
+                "name": "Gulai Cincang",
+                "price": 25000,
+                "qty": 300
+            }
+        ],
+        "customer_name": "budi"
     }
 ]

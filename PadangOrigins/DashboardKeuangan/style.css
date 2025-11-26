@@ -457,6 +457,9 @@ table th { background: #f8f9fa; color: #999; font-size: 0.8rem; text-transform: 
 .nav-card:nth-child(7) { animation-delay: 0.40s; }
 .nav-card:nth-child(8) { animation-delay: 0.45s; }
 .nav-card:nth-child(9) { animation-delay: 0.50s; }
+.nav-card:nth-child(10) { animation-delay: 0.55s; }
+.nav-card:nth-child(11) { animation-delay: 0.60s; }
+.nav-card:nth-child(12) { animation-delay: 0.65s; }
 
 /* 4. Micro-interaction saat Hover (Kecil tapi berdampak) */
 .nav-card:hover .card-icon {

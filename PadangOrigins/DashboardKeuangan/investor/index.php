@@ -125,7 +125,7 @@ foreach ($rekeningData as $rek) {
         </div>
     </nav>
     <div style="padding: 10px 2rem; font-size: 0.85rem; background:white; border-bottom:1px solid #eee;">
-        <a href="../../home/index.php" style="text-decoration:none; color: #64748b; font-weight: 600;">← Kembali ke Dashboard Utama</a>
+        <a href="../../DashboardKeuangan/index.php" style="text-decoration:none; color: #64748b; font-weight: 600;">← Kembali ke Dashboard Utama</a>
     </div>
 
     <div class="tradingview-widget-container">

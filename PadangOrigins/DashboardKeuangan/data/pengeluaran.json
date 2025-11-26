@@ -138,5 +138,35 @@
         "sumber_dana": "Mandiri",
         "jumlah": 380700,
         "admin": "john"
+    },
+    {
+        "id": "EXP-BLJ-692746cc051d4",
+        "tanggal": "2025-11-26 18:28:28",
+        "kategori": "Belanja Bahan Baku",
+        "deskripsi": "Belanja Pasar: ayam (15 kg), Minyak Goreng (15 liter), kepala tua(parut) (15 pcs), Daging Sapi (16 kg), Ikan Tongkol (16 kg), Cabai merah keriting (17 kg), Cabai rawit merah(setan) (17 kg), Bawan Merah (15 kg), Bawan Putih(Bonggol) (16 kg), Nangka Muda(Gori\/Tewel) (16 kg), Daun Singkong (18 kg), Kacang Panjang (18 kg), Timun (18 kg), Cabai Merah Giling(Basah) (18 kg), Bawang Merah Giling (18 kg), Bumbu Lengkuas &amp; Jahe Giling (16 kg), Bumbu &quot;jadi&quot;(Racikan Pasar) (16 kg), Santan Murni (Pati) (16 kg), Santan Encer (18 kg), Kelapa Parut (17 kg), Ambu-ambu (Kerisik) (15 kg), Kikil \/ Tunjang Rebus (15 kg), Paru Rebus (15 kg), Ikan Salai (Limbat\/Lele) (15 kg), Ikan Asin Jambal\/Peda (15 kg), Daging Tetelan (15 kg), Kerupuk Jangek (Mentah) (15 kg), Emping Melinjo (16 kg), Teh Bubuk (Teh Talua) (16 kg), Bawang Goreng (16 kg), Rendang Daging (19 pcs), Dendeng (Balado\/Batokok) (19 pcs), Gulai Cincang (Lemak) (19 pcs), Gulai Tunjang (Kikil) (19 pcs), Paru Goreng (19 pcs), Gulai Otak (19 pcs), Ayam Gulai (19 pcs), Ayam Bakar (19 pcs), Ayam Pop (19 pcs), Ayam Goreng Bumbu (19 pcs), Ayam Balado (Merah\/Ijo) (19 pcs), Gulai Itiak (Bebek) (19 pcs), Ikan Kembung Bakar (19 pcs), Gulai Kepala Kakap (19 pcs), Tongkol Asam Padeh (19 pcs), Udang Balado\/Gulai (19 pcs), Cumi Gulai (Isi Tahu) (19 pcs), Etalase Kaca(Aluminium) (19 pcs)",
+        "penerima": "Pedagang Pasar",
+        "sumber_dana": "Kas Operasional",
+        "jumlah": 77324000,
+        "admin": "admin"
+    },
+    {
+        "id": "EXP-BLJ-6927479225344",
+        "tanggal": "2025-11-26 18:31:46",
+        "kategori": "Belanja Bahan Baku",
+        "deskripsi": "Belanja Pasar: buah naga (16 20)",
+        "penerima": "Pedagang Pasar",
+        "sumber_dana": "Kas Operasional",
+        "jumlah": 1600000,
+        "admin": "admin"
+    },
+    {
+        "id": "EXP-SHOP-69274b3f79105",
+        "tanggal": "2025-11-26 18:47:27",
+        "kategori": "Belanja Bahan Baku",
+        "deskripsi": "Restock: ayam (+16 kg)",
+        "penerima": "Vendor Pasar",
+        "sumber_dana": "SeaBank",
+        "jumlah": 800000,
+        "admin": "admin"
     }
 ]
