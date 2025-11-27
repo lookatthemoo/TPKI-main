@@ -44,5 +44,77 @@
             }
         ],
         "customer_name": "budi"
+    },
+    {
+        "id": "69280c292cbf3",
+        "tanggal": "2025-11-27",
+        "tipe": "pendapatan",
+        "kategori": "Return Investasi",
+        "deskripsi": "Jual 1 Lot BBCA @ 9.800",
+        "jumlah": 980000
+    },
+    {
+        "id": "69280c32c6a3d",
+        "tanggal": "2025-11-27",
+        "tipe": "pendapatan",
+        "kategori": "Return Investasi",
+        "deskripsi": "Jual 1 Lot BBRI @ 5.600",
+        "jumlah": 560000
+    },
+    {
+        "id": "69280f2786182",
+        "tanggal": "2025-11-27",
+        "tipe": "pendapatan",
+        "kategori": "Return Investasi",
+        "deskripsi": "Jual 8 Lot BBCA @ 9.800",
+        "jumlah": 7840000
+    },
+    {
+        "id": "69280f634ef0e",
+        "tanggal": "2025-11-27",
+        "tipe": "pendapatan",
+        "kategori": "Return Investasi",
+        "deskripsi": "Jual 1 Lot TLKM @ 3.800",
+        "jumlah": 380000
+    },
+    {
+        "id": "692812363d8c8",
+        "tanggal": "2025-11-27",
+        "tipe": "pendapatan",
+        "kategori": "Return Investasi",
+        "deskripsi": "Jual 1 Lot CDIA @ 1.925",
+        "jumlah": 192500
+    },
+    {
+        "id": "6928155377023",
+        "tanggal": "2025-11-27",
+        "tipe": "pendapatan",
+        "kategori": "Return Investasi",
+        "deskripsi": "Jual 1 Lot BBCA @ 8.350",
+        "jumlah": 835000
+    },
+    {
+        "id": "69281a912de65",
+        "tanggal": "2025-11-27",
+        "tipe": "pendapatan",
+        "kategori": "Return Investasi",
+        "deskripsi": "Jual 4 Lot CDIA @ 1.930",
+        "jumlah": 772000
+    },
+    {
+        "id": "69281a9856040",
+        "tanggal": "2025-11-27",
+        "tipe": "pendapatan",
+        "kategori": "Return Investasi",
+        "deskripsi": "Jual 30 Lot BBRI @ 3.740",
+        "jumlah": 11220000
+    },
+    {
+        "id": "69281aa00e822",
+        "tanggal": "2025-11-27",
+        "tipe": "pendapatan",
+        "kategori": "Return Investasi",
+        "deskripsi": "Jual 20 Lot TLKM @ 3.570",
+        "jumlah": 7140000
     }
 ]

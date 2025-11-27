@@ -168,5 +168,75 @@
         "sumber_dana": "SeaBank",
         "jumlah": 800000,
         "admin": "admin"
+    },
+    {
+        "id": "TRX-SAHAM-69280c1d331fc",
+        "tanggal": "2025-11-27 15:30:21",
+        "kategori": "Investasi Saham",
+        "deskripsi": "Buy 1 Lot BBCA @ 8.350",
+        "penerima": "Bursa Efek",
+        "sumber_dana": "Mandiri",
+        "jumlah": 835000,
+        "admin": "admin"
+    },
+    {
+        "id": "TRX-SAHAM-69280e071ad1a",
+        "tanggal": "2025-11-27 15:38:31",
+        "kategori": "Investasi Saham",
+        "deskripsi": "Buy 8 Lot BBCA @ 8.375",
+        "penerima": "Bursa Efek",
+        "sumber_dana": "Mandiri",
+        "jumlah": 6700000,
+        "admin": "admin"
+    },
+    {
+        "id": "TRX-SAHAM-69280f154c25f",
+        "tanggal": "2025-11-27 15:43:01",
+        "kategori": "Investasi Saham",
+        "deskripsi": "Buy 1 Lot CDIA @ 1.925",
+        "penerima": "Bursa Efek",
+        "sumber_dana": "Mandiri",
+        "jumlah": 192500,
+        "admin": "admin"
+    },
+    {
+        "id": "TRX-SAHAM-6928127f0684c",
+        "tanggal": "2025-11-27 15:57:35",
+        "kategori": "Investasi Saham",
+        "deskripsi": "Buy 1 Lot BBCA @ 8.350",
+        "penerima": "Bursa Efek",
+        "sumber_dana": "Mandiri",
+        "jumlah": 835000,
+        "admin": "admin"
+    },
+    {
+        "id": "TRX-SAHAM-6928156897aa2",
+        "tanggal": "2025-11-27 16:10:00",
+        "kategori": "Investasi Saham",
+        "deskripsi": "Buy 4 Lot CDIA @ 1.930",
+        "penerima": "Bursa Efek",
+        "sumber_dana": "Mandiri",
+        "jumlah": 772000,
+        "admin": "admin"
+    },
+    {
+        "id": "TRX-SAHAM-6928159f3e178",
+        "tanggal": "2025-11-27 16:10:55",
+        "kategori": "Investasi Saham",
+        "deskripsi": "Buy 30 Lot BBRI @ 3.740",
+        "penerima": "Bursa Efek",
+        "sumber_dana": "Mandiri",
+        "jumlah": 11220000,
+        "admin": "admin"
+    },
+    {
+        "id": "TRX-SAHAM-692818cc54cee",
+        "tanggal": "2025-11-27 16:24:28",
+        "kategori": "Investasi Saham",
+        "deskripsi": "Buy 20 Lot TLKM @ 3.570",
+        "penerima": "Bursa Efek",
+        "sumber_dana": "Mandiri",
+        "jumlah": 7140000,
+        "admin": "admin"
     }
 ]
