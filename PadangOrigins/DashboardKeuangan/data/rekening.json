@@ -4,14 +4,14 @@
         "nama_bank": "BCA",
         "jenis": "bank",
         "nomer": "8901234567",
-        "saldo": 37600018495
+        "saldo": 37599994995
     },
     {
         "id": "BANK-MANDIRI",
         "nama_bank": "Mandiri",
         "jenis": "bank",
         "nomer": "12300098765",
-        "saldo": 22001227700
+        "saldo": 13493452700
     },
     {
         "id": "BANK-BRI",
@@ -32,7 +32,7 @@
         "nama_bank": "SeaBank",
         "jenis": "bank",
         "nomer": "9012345678",
-        "saldo": 6700000
+        "saldo": 47708000
     },
     {
         "id": "EWAL-GOPAY",

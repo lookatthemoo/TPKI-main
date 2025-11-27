@@ -8,12 +8,12 @@
         "gaji_pokok": 500,
         "saldo_gaji": 0,
         "saldo_bonus": 0,
-        "bonus_pending": 1500,
-        "hadir": 2,
+        "bonus_pending": 45000,
+        "hadir": 3,
         "izin": 0,
         "performa": "Baik",
-        "terakhir_gaji": "2025-11-26",
-        "terakhir_absen": "2025-11-26"
+        "terakhir_gaji": "2025-11-27",
+        "terakhir_absen": "2025-11-27"
     },
     {
         "id": "KRY-1763817444",
@@ -62,20 +62,5 @@
         "performa": "Baik",
         "terakhir_gaji": "2025-11-26",
         "terakhir_absen": "2025-11-26"
-    },
-    {
-        "id": "EMP-6926dcd7de230",
-        "nama": "tes",
-        "posisi": "qc",
-        "gaji_pokok": 200,
-        "hadir": 0,
-        "izin": 0,
-        "alpa": 0,
-        "bonus_pending": 0,
-        "performa": "Baik",
-        "terakhir_gaji": "-",
-        "terakhir_absen": "-",
-        "username": "tes",
-        "password": "12345"
     }
 ]

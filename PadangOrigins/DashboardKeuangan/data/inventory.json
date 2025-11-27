@@ -45,9 +45,9 @@
         "kategori": "Bahan Mentah",
         "qty": 20,
         "satuan": "kg",
-        "harga": "135000",
+        "harga": 135000,
         "total_nilai": 540000,
-        "updated_at": "2025-11-26 18:28:28"
+        "updated_at": "2025-11-27 14:40:06"
     },
     {
         "id": "item_6926c4732df63",
@@ -55,9 +55,9 @@
         "kategori": "Bahan Mentah",
         "qty": 20,
         "satuan": "kg",
-        "harga": "37000",
+        "harga": 37000,
         "total_nilai": 148000,
-        "updated_at": "2025-11-26 18:28:28"
+        "updated_at": "2025-11-27 14:40:06"
     },
     {
         "id": "item_6926c4b678fee",
@@ -73,11 +73,11 @@
         "id": "item_6926c4f5b08f1",
         "nama": "Cabai rawit merah(setan)",
         "kategori": "Bahan Mentah",
-        "qty": 20,
+        "qty": 104,
         "satuan": "kg",
-        "harga": "55000",
-        "total_nilai": 165000,
-        "updated_at": "2025-11-26 18:28:28"
+        "harga": 55000,
+        "total_nilai": 220000,
+        "updated_at": "2025-11-27 14:41:15"
     },
     {
         "id": "item_6926c51b7f6aa",
@@ -103,11 +103,11 @@
         "id": "item_6926c5ce897fd",
         "nama": "Paket Bumbu Dedaunan(Sereh, Daun, Salam, Jeruk, Kunyit)",
         "kategori": "Bahan Mentah",
-        "qty": 8,
+        "qty": 23,
         "satuan": "pcs",
         "harga": 25000,
-        "total_nilai": 200000,
-        "updated_at": "2025-11-26 09:18:06"
+        "total_nilai": 75000,
+        "updated_at": "2025-11-27 14:41:15"
     },
     {
         "id": "item_6926c61063f19",
@@ -125,9 +125,9 @@
         "kategori": "Bahan Mentah",
         "qty": 20,
         "satuan": "kg",
-        "harga": "15000",
-        "total_nilai": 30000,
-        "updated_at": "2025-11-26 18:28:28"
+        "harga": 15000,
+        "total_nilai": 60000,
+        "updated_at": "2025-11-27 14:40:06"
     },
     {
         "id": "item_6926c671e30bd",

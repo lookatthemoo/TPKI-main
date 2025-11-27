@@ -1,120 +1,164 @@
 [
     {
-        "id": "order_69272a88789f5",
-        "tanggal": "2025-11-26 16:27:52",
-        "tipe": "pendapatan",
-        "status": "Telah Diambil",
-        "jumlah": 22000000000,
-        "akun_sumber": "Customer",
-        "akun_tujuan": "Mandiri",
-        "deskripsi": "Order (Ilham): 1000000x Ayam Laos",
-        "pelaku": "System",
-        "items": [
-            {
-                "name": "Ayam Laos",
-                "price": 22000,
-                "qty": 1000000
-            }
-        ],
-        "customer_name": "Ilham"
-    },
-    {
-        "id": "69272ad3170fd",
-        "tanggal": "2025-11-26",
+        "id": "692855ab8a432",
+        "tanggal": "2025-11-27",
         "tipe": "pendapatan",
         "kategori": "Return Investasi",
-        "deskripsi": "Jual 20 Lot BBCA @ 9775",
-        "jumlah": 19550000
+        "deskripsi": "Jual 1 Lot BBCA @ 8.325",
+        "jumlah": 832500
     },
     {
-        "id": "order_69274b1df1037",
-        "tanggal": "2025-11-26 18:46:53",
+        "id": "692855bf4cc75",
+        "tanggal": "2025-11-27",
+        "tipe": "pendapatan",
+        "kategori": "Return Investasi",
+        "deskripsi": "Jual 20 Lot BBCA @ 8.325",
+        "jumlah": 16650000
+    },
+    {
+        "id": "SAL-69285d71b9121",
+        "tanggal": "2025-11-27 21:17:21",
+        "tipe": "pengeluaran",
+        "akun_sumber": "BCA",
+        "akun_tujuan": "Karyawan: william eka putra supriadi",
+        "jumlah": 500,
+        "deskripsi": "Gaji Bulanan: william eka putra supriadi",
+        "pelaku": "admin"
+    },
+    {
+        "id": "WD-1764253128",
+        "tanggal": "2025-11-27 14:18:48",
+        "tipe": "pengeluaran",
+        "jumlah": 2000,
+        "deskripsi": "Penarikan Karyawan (Gaji): william eka putra supriadi",
+        "pelaku": "william eka putra supriadi",
+        "akun_sumber": "kas_laci",
+        "akun_tujuan": "Pribadi"
+    },
+    {
+        "id": "order_69285ff2d6c8a",
+        "tanggal": "2025-11-27 14:28:02",
         "tipe": "pendapatan",
         "status": "Telah Diambil",
-        "jumlah": 7500000,
+        "jumlah": 375000,
         "akun_sumber": "Customer",
-        "akun_tujuan": "SeaBank",
-        "deskripsi": "Order (budi): 300x Gulai Cincang",
+        "akun_tujuan": "Mandiri",
+        "deskripsi": "Order (budi): 15x Gulai Cincang",
         "pelaku": "System",
         "items": [
             {
                 "name": "Gulai Cincang",
                 "price": 25000,
-                "qty": 300
+                "qty": 15
             }
         ],
         "customer_name": "budi"
     },
     {
-        "id": "69280c292cbf3",
-        "tanggal": "2025-11-27",
+        "id": "order_6928601aa2bde",
+        "tanggal": "2025-11-27 14:28:42",
         "tipe": "pendapatan",
-        "kategori": "Return Investasi",
-        "deskripsi": "Jual 1 Lot BBCA @ 9.800",
-        "jumlah": 980000
+        "status": "Telah Diambil",
+        "jumlah": 525000,
+        "akun_sumber": "Customer",
+        "akun_tujuan": "kas_laci",
+        "deskripsi": "Order (roy): 21x Gulai Cincang",
+        "pelaku": "System",
+        "items": [
+            {
+                "name": "Gulai Cincang",
+                "price": 25000,
+                "qty": 21
+            }
+        ],
+        "customer_name": "roy"
     },
     {
-        "id": "69280c32c6a3d",
-        "tanggal": "2025-11-27",
-        "tipe": "pendapatan",
-        "kategori": "Return Investasi",
-        "deskripsi": "Jual 1 Lot BBRI @ 5.600",
-        "jumlah": 560000
+        "id": "TRX-1764254272",
+        "tanggal": "2025-11-27 21:37:52",
+        "tipe": "transfer",
+        "akun_sumber": "BCA",
+        "akun_tujuan": "SeaBank",
+        "jumlah": 30000000,
+        "deskripsi": "Transfer: BCA -> SeaBank (beli barang)",
+        "pelaku": "admin"
     },
     {
-        "id": "69280f2786182",
-        "tanggal": "2025-11-27",
-        "tipe": "pendapatan",
-        "kategori": "Return Investasi",
-        "deskripsi": "Jual 8 Lot BBCA @ 9.800",
-        "jumlah": 7840000
+        "id": "TRX-1764254304",
+        "tanggal": "2025-11-27 21:38:24",
+        "tipe": "transfer",
+        "akun_sumber": "kas_laci",
+        "akun_tujuan": "SeaBank",
+        "jumlah": 18005500,
+        "deskripsi": "Transfer: kas_laci -> SeaBank (seabank)",
+        "pelaku": "admin"
     },
     {
-        "id": "69280f634ef0e",
-        "tanggal": "2025-11-27",
+        "id": "order_692862b2539ea",
+        "tanggal": "2025-11-27 14:39:46",
         "tipe": "pendapatan",
-        "kategori": "Return Investasi",
-        "deskripsi": "Jual 1 Lot TLKM @ 3.800",
-        "jumlah": 380000
+        "status": "Diterima",
+        "jumlah": 50000000,
+        "akun_sumber": "Customer",
+        "akun_tujuan": "SeaBank",
+        "deskripsi": "Order (jefri): 2000x Gulai Cincang",
+        "pelaku": "System",
+        "items": [
+            {
+                "name": "Gulai Cincang",
+                "price": 25000,
+                "qty": 2000
+            }
+        ],
+        "customer_name": "jefri"
     },
     {
-        "id": "692812363d8c8",
-        "tanggal": "2025-11-27",
-        "tipe": "pendapatan",
-        "kategori": "Return Investasi",
-        "deskripsi": "Jual 1 Lot CDIA @ 1.925",
-        "jumlah": 192500
+        "id": "TRX-1764254851",
+        "tanggal": "2025-11-27 21:47:31",
+        "tipe": "transfer",
+        "akun_sumber": "BCA",
+        "akun_tujuan": "kas_ops",
+        "jumlah": 20000000000,
+        "deskripsi": "Transfer: BCA -> kas_ops (tes)",
+        "pelaku": "admin"
     },
     {
-        "id": "6928155377023",
-        "tanggal": "2025-11-27",
-        "tipe": "pendapatan",
-        "kategori": "Return Investasi",
-        "deskripsi": "Jual 1 Lot BBCA @ 8.350",
-        "jumlah": 835000
+        "id": "TRX-OPS-6928650893998",
+        "tanggal": "2025-11-27 21:49:44",
+        "tipe": "pengeluaran",
+        "akun_sumber": "kas_ops",
+        "akun_tujuan": "Pengeluaran",
+        "jumlah": 20000000000,
+        "deskripsi": "Kas Ops: beli bensin",
+        "pelaku": "admin"
     },
     {
-        "id": "69281a912de65",
-        "tanggal": "2025-11-27",
-        "tipe": "pendapatan",
-        "kategori": "Return Investasi",
-        "deskripsi": "Jual 4 Lot CDIA @ 1.930",
-        "jumlah": 772000
+        "id": "TRX-1764255020",
+        "tanggal": "2025-11-27 21:50:20",
+        "tipe": "transfer",
+        "akun_sumber": "BCA",
+        "akun_tujuan": "kas_ops",
+        "jumlah": 37000000000,
+        "deskripsi": "Transfer: BCA -> kas_ops (kembalikan uang)",
+        "pelaku": "admin"
     },
     {
-        "id": "69281a9856040",
-        "tanggal": "2025-11-27",
-        "tipe": "pendapatan",
-        "kategori": "Return Investasi",
-        "deskripsi": "Jual 30 Lot BBRI @ 3.740",
-        "jumlah": 11220000
+        "id": "SAL-692867a0c8c35",
+        "tanggal": "2025-11-27 22:00:48",
+        "tipe": "pengeluaran",
+        "akun_sumber": "BCA",
+        "akun_tujuan": "Karyawan: william eka putra supriadi",
+        "jumlah": 500,
+        "deskripsi": "Gaji Bulanan: william eka putra supriadi",
+        "pelaku": "admin"
     },
     {
-        "id": "69281aa00e822",
-        "tanggal": "2025-11-27",
-        "tipe": "pendapatan",
-        "kategori": "Return Investasi",
-        "deskripsi": "Jual 20 Lot TLKM @ 3.570",
-        "jumlah": 7140000
+        "id": "BON-69286824caccd",
+        "tanggal": "2025-11-27 22:03:00",
+        "tipe": "pengeluaran",
+        "akun_sumber": "BCA",
+        "jumlah": 22500,
+        "deskripsi": "Bonus: william eka putra supriadi",
+        "pelaku": "admin"
     }
 ]

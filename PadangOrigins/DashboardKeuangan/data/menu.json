@@ -26,5 +26,12 @@
         "harga": 16000,
         "deskripsi": "test",
         "gambar": "menu_1763883443.jpeg"
+    },
+    {
+        "id": "MENU-1764253844",
+        "nama": "sayur",
+        "harga": 1000,
+        "deskripsi": "sangat sehat",
+        "gambar": "menu_1764253844.png"
     }
 ]

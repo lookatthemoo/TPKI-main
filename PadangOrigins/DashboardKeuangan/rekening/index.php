@@ -43,7 +43,7 @@ $rekeningList = file_exists($fileRekening) ? json_decode(file_get_contents($file
 
     <header class="navbar">
         <div class="container">
-            <h1 class="logo">Financial AI Core</h1>
+            <h1 class="logo">Rekening antara 33</h1>
             <nav>
                 <a href="../index.php" class="nav-link">Dashboard</a>
                 <a href="#" class="nav-link active">Rekening</a>

@@ -260,17 +260,7 @@ $totalAset = $kasLaci + $kasOps + $totalSaldoBank;
         </div>
     </div>
 
-    <div id="modalAddReport" class="modal-overlay">
-        <div class="modal-box">
-            <div style="display:flex; justify-content:space-between; margin-bottom:1rem;"><h2>Tambah Widget</h2><span onclick="document.getElementById('modalAddReport').style.display='none'" style="cursor:pointer;">×</span></div>
-            <form method="POST" action="proses_laporan.php">
-                <input type="hidden" name="action" value="tambah_widget">
-                <label>Judul</label><input type="text" name="nama_laporan" class="form-control" required>
-                <label>Pilih JSON</label><select name="sumber_json" class="form-control"><?php foreach ($jsonFiles as $f) echo "<option value='$f'>$f</option>"; ?></select>
-                <button type="submit" style="width:100%; background:#2c3e50; color:white; padding:10px; border:none; border-radius:8px;">Tampilkan</button>
-            </form>
-        </div>
-    </div>
+
 
     <div id="modalTutup" class="modal-overlay">
         <div class="modal-box">

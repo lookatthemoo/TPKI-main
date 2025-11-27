@@ -238,5 +238,115 @@
         "sumber_dana": "Mandiri",
         "jumlah": 7140000,
         "admin": "admin"
+    },
+    {
+        "id": "TRX-SAHAM-6928559e23a0a",
+        "tanggal": "2025-11-27 20:43:58",
+        "kategori": "Investasi Saham",
+        "deskripsi": "Buy 1 Lot BBCA @ 8.325",
+        "penerima": "Bursa Efek",
+        "sumber_dana": "Mandiri",
+        "jumlah": 832500,
+        "admin": "admin"
+    },
+    {
+        "id": "TRX-SAHAM-692855b901ff3",
+        "tanggal": "2025-11-27 20:44:25",
+        "kategori": "Investasi Saham",
+        "deskripsi": "Buy 20 Lot BBCA @ 8.325",
+        "penerima": "Bursa Efek",
+        "sumber_dana": "Mandiri",
+        "jumlah": 16650000,
+        "admin": "admin"
+    },
+    {
+        "id": "TRX-SAHAM-6928566340493",
+        "tanggal": "2025-11-27 20:47:15",
+        "kategori": "Investasi Saham",
+        "deskripsi": "Buy 20 Lot BBCA @ 8.325",
+        "penerima": "Bursa Efek",
+        "sumber_dana": "Mandiri",
+        "jumlah": 16650000,
+        "admin": "admin"
+    },
+    {
+        "id": "EXP-AUTO-69285d71b972c",
+        "tanggal": "2025-11-27 21:17:21",
+        "kategori": "Gaji Karyawan",
+        "deskripsi": "Gaji Bulanan: william eka putra supriadi",
+        "penerima": "william eka putra supriadi",
+        "sumber_dana": "BCA",
+        "jumlah": 500,
+        "admin": "admin (Auto)"
+    },
+    {
+        "id": "EXP-SHOP-692862c60af54",
+        "tanggal": "2025-11-27 14:40:06",
+        "kategori": "Belanja Bahan Baku",
+        "deskripsi": "Restock: Daging Sapi (+16 kg), Ikan Tongkol (+16 kg), Daun Singkong (+16 kg)",
+        "penerima": "Vendor Pasar",
+        "sumber_dana": "SeaBank",
+        "jumlah": 2992000,
+        "admin": "admin"
+    },
+    {
+        "id": "EXP-SHOP-6928630ba6f80",
+        "tanggal": "2025-11-27 14:41:15",
+        "kategori": "Belanja Bahan Baku",
+        "deskripsi": "Restock: Cabai rawit merah(setan) (+100 kg), Paket Bumbu Dedaunan(Sereh, Daun, Salam, Jeruk, Kunyit) (+20 pcs)",
+        "penerima": "Vendor Pasar",
+        "sumber_dana": "SeaBank",
+        "jumlah": 6000000,
+        "admin": "admin"
+    },
+    {
+        "id": "EXP-OPS-6928650893f7a",
+        "tanggal": "2025-11-27 21:49:44",
+        "kategori": "Operasional",
+        "deskripsi": "beli bensin",
+        "penerima": "-",
+        "sumber_dana": "Kas Operasional",
+        "jumlah": 20000000000,
+        "admin": "admin"
+    },
+    {
+        "id": "EXP-AUTO-692867a0ca506",
+        "tanggal": "2025-11-27 22:00:48",
+        "kategori": "Gaji Karyawan",
+        "deskripsi": "Gaji Bulanan: william eka putra supriadi",
+        "penerima": "william eka putra supriadi",
+        "sumber_dana": "BCA",
+        "jumlah": 500,
+        "admin": "admin (Auto)"
+    },
+    {
+        "id": "EXP-BON-69286824cca60",
+        "tanggal": "2025-11-27 22:03:00",
+        "kategori": "Bonus",
+        "deskripsi": "Bonus Kinerja: william eka putra supriadi",
+        "penerima": "william eka putra supriadi",
+        "sumber_dana": "BCA",
+        "jumlah": 22500,
+        "admin": "admin (Auto)"
+    },
+    {
+        "id": "TRX-SAHAM-692868d534b31",
+        "tanggal": "2025-11-27 22:05:57",
+        "kategori": "Investasi Saham",
+        "deskripsi": "Buy 200 Lot BBCA @ 8.325",
+        "penerima": "Bursa Efek",
+        "sumber_dana": "Mandiri",
+        "jumlah": 166500000,
+        "admin": "admin"
+    },
+    {
+        "id": "TRX-SAHAM-692868ea299a8",
+        "tanggal": "2025-11-27 22:06:18",
+        "kategori": "Investasi Saham",
+        "deskripsi": "Buy 10000 Lot BBCA @ 8.325",
+        "penerima": "Bursa Efek",
+        "sumber_dana": "Mandiri",
+        "jumlah": 8325000000,
+        "admin": "admin"
     }
 ]

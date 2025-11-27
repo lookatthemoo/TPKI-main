@@ -147,8 +147,8 @@ foreach ($menuPerformance as $mp) {
 
     <header class="eng-header">
         <div>
-            <h1 style="font-size: 1.5rem; font-weight: 800; color: #0f172a;">🧩 Menu Engineering</h1>
-            <p style="color: #64748b; font-size: 0.9rem;">Analisa Matrix Profitabilitas & Popularitas</p>
+            <h1 style="font-size: 1.5rem; font-weight: 800; color: #0f172a;">🧩 Analisa menu</h1>
+            <p style="color: #64748b; font-size: 0.9rem;">Analisa Profitabilitas & Popularitas</p>
         </div>
         <a href="index.php" class="back-btn">← Dashboard</a>
     </header>

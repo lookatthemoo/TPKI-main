@@ -34,7 +34,7 @@ $totalMenu = count($menuList);
 
     <header class="navbar">
         <div class="container">
-            <h1 class="logo">Financial AI Core</h1>
+            <h1 class="logo">ADMIN ANTARA 33</h1>
             <nav>
                 <a href="index.php" class="nav-link active">Dashboard</a>
                 <a href="logout.php" class="nav-link btn-logout">Logout</a>
@@ -59,13 +59,29 @@ $totalMenu = count($menuList);
         <section class="main-nav-cards">
 
             <div class="nav-card">
-                <span class="status-badge" style="background:#e0fcf6; color:#00b894;">DAILY</span>
-                <div class="card-icon" style="color: #00b894; background: #e0fcf6;">📊</div>
-                <h3>Laporan Harian</h3>
-                <p>Pantau Kas, Omzet Hari Ini, dan Pengeluaran Harian.</p>
-                <a href="laporan/" class="card-btn"
-                    style="background: #00b894; color: white; box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);">Buka
-                    Laporan ➔</a>
+                <span class="status-badge">LIVE</span>
+                <div class="card-icon">🍳</div>
+                <h3>Dapur & Pesanan</h3>
+                <p>Pantau pesanan masuk secara real-time.</p>
+                <a href="pesanan.php" class="card-btn btn-blue">Buka Dapur ➔</a>
+            </div>
+
+            <div class="nav-card">
+                <div class="card-icon" style="color: #9b59b6; background: #f5eef8;">🍔</div>
+                <h3>Kelola Menu</h3>
+                <p>Tambah menu baru dan upload foto.</p>
+                <button onclick="bukaModalMenu()" class="card-btn" style="background: #9b59b6; color: white;">Tambah
+                    Menu +</button>
+            </div>
+
+            <div class="nav-card">
+                <span class="status-badge" style="background:#fff7ed; color:#c2410c;">STRATEGY</span>
+                <div class="card-icon" style="color: #ea580c; background: #fff7ed;">🧩</div>
+                <h3>Analisa menu</h3>
+                <p>Analisa Profitabilitas: Mana menu 'Bintang' & mana 'Beban'.</p>
+                <a href="analisa_menu.php" class="card-btn"
+                    style="background: #ea580c; color: white; box-shadow: 0 4px 15px rgba(234, 88, 12, 0.3);">Cek
+                    Matriks ➔</a>
             </div>
 
             <div class="nav-card">
@@ -79,20 +95,15 @@ $totalMenu = count($menuList);
             </div>
 
             <div class="nav-card">
-                <span class="status-badge">LIVE</span>
-                <div class="card-icon">🍳</div>
-                <h3>Dapur & Pesanan</h3>
-                <p>Pantau pesanan masuk secara real-time.</p>
-                <a href="pesanan.php" class="card-btn btn-blue">Buka Dapur ➔</a>
+                <span class="status-badge" style="background:#ecfdf5; color:#047857;">URGENT</span>
+                <div class="card-icon" style="color: #059669; background: #ecfdf5;">🛒</div>
+                <h3>Belanja Pasar</h3>
+                <p>Daftar belanja otomatis & kontrol harga bahan baku.</p>
+                <a href="belanja.php" class="card-btn"
+                    style="background: #059669; color: white; box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);">Cek Daftar
+                    Belanja ➔</a>
             </div>
 
-            <div class="nav-card">
-                <span class="status-badge badge-dev">REPORT</span>
-                <div class="card-icon">💰</div>
-                <h3>Laporan Lengkap</h3>
-                <p>Analisa keuangan bulanan dan penarikan dana.</p>
-                <a href="laporan.php" class="card-btn btn-orange">Analisa Full ➔</a>
-            </div>
 
             <div class="nav-card">
                 <span class="status-badge" style="background:#e0e7ff; color:#4338ca;">WALLET</span>
@@ -104,6 +115,19 @@ $totalMenu = count($menuList);
                     Saldo ➔</a>
             </div>
 
+
+            <div class="nav-card">
+                <span class="status-badge" style="background:#e0fcf6; color:#00b894;">DAILY</span>
+                <div class="card-icon" style="color: #00b894; background: #e0fcf6;">📊</div>
+                <h3>Laporan Harian</h3>
+                <p>Pantau Kas, Omzet Hari Ini, dan Pengeluaran Harian.</p>
+                <a href="laporan/" class="card-btn"
+                    style="background: #00b894; color: white; box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);">Buka
+                    Laporan ➔</a>
+            </div>
+
+
+
             <div class="nav-card">
                 <span class="status-badge" style="background:#e3f2fd; color:#1565c0;">HRD</span>
                 <div class="card-icon" style="color:#673ab7;">👥</div>
@@ -113,21 +137,20 @@ $totalMenu = count($menuList);
             </div>
 
             <div class="nav-card">
-                <span class="status-badge" style="background:#fee2e2; color:#991b1b;">EXPENSE</span>
-                <div class="card-icon" style="color: #ef4444; background: #fee2e2;">💸</div>
-                <h3>Pusat Pengeluaran</h3>
-                <p>Catat Gaji, Bonus, Operasional, & Belanja.</p>
-                <a href="pengeluaran/" class="card-btn"
-                    style="background: #ef4444; color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);">Kelola
-                    Biaya ➔</a>
+                <span class="status-badge" style="background:#f0fdfa; color:#0d9488;">SURVIVAL</span>
+                <div class="card-icon" style="color: #14b8a6; background: #f0fdfa;">🛡️</div>
+                <h3>Napas Bisnis (Runway)</h3>
+                <p>Estimasi ketahanan dana kas operasional (Bulan).</p>
+                <a href="runway.php" class="card-btn"
+                    style="background: #14b8a6; color: white; box-shadow: 0 4px 15px rgba(20, 184, 166, 0.3);">Cek
+                    Status Aman ➔</a>
             </div>
-
             <div class="nav-card">
-                <div class="card-icon" style="color: #9b59b6; background: #f5eef8;">🍔</div>
-                <h3>Kelola Menu</h3>
-                <p>Tambah menu baru dan upload foto.</p>
-                <button onclick="bukaModalMenu()" class="card-btn" style="background: #9b59b6; color: white;">Tambah
-                    Menu +</button>
+                <span class="status-badge badge-dev">REPORT</span>
+                <div class="card-icon">💰</div>
+                <h3>Laporan Lengkap</h3>
+                <p>Analisa keuangan bulanan dan penarikan dana.</p>
+                <a href="laporan.php" class="card-btn btn-orange">Analisa Full ➔</a>
             </div>
 
             <div class="nav-card">
@@ -140,6 +163,8 @@ $totalMenu = count($menuList);
                     Investor ➔</a>
             </div>
 
+
+
             <div class="nav-card">
                 <span class="status-badge" style="background:#f1f5f9; color:#475569;">GLOBAL</span>
                 <div class="card-icon" style="color: #475569; background: #f1f5f9;">📰</div>
@@ -150,45 +175,7 @@ $totalMenu = count($menuList);
                     Berita ➔</a>
             </div>
 
-            <div class="nav-card">
-                <span class="status-badge" style="background:#e0e7ff; color:#4338ca;">PRO TOOLS</span>
-                <div class="card-icon" style="color: #4338ca; background: #e0e7ff;">🛠️</div>
-                <h3>Market Tools</h3>
-                <p>Screener Saham, Kalender Ekonomi, & Komoditas.</p>
-                <a href="tools.php" class="card-btn"
-                    style="background: #4338ca; color: white; box-shadow: 0 4px 15px rgba(67, 56, 202, 0.3);">Buka Tools
-                    ➔</a>
-            </div>
 
-            <div class="nav-card">
-                <span class="status-badge" style="background:#fff7ed; color:#c2410c;">STRATEGY</span>
-                <div class="card-icon" style="color: #ea580c; background: #fff7ed;">🧩</div>
-                <h3>Menu Engineering</h3>
-                <p>Analisa Profitabilitas: Mana menu 'Bintang' & mana 'Beban'.</p>
-                <a href="analisa_menu.php" class="card-btn"
-                    style="background: #ea580c; color: white; box-shadow: 0 4px 15px rgba(234, 88, 12, 0.3);">Cek
-                    Matriks ➔</a>
-            </div>
-
-            <div class="nav-card">
-                <span class="status-badge" style="background:#ecfdf5; color:#047857;">URGENT</span>
-                <div class="card-icon" style="color: #059669; background: #ecfdf5;">🛒</div>
-                <h3>Belanja Pasar</h3>
-                <p>Daftar belanja otomatis & kontrol harga bahan baku.</p>
-                <a href="belanja.php" class="card-btn"
-                    style="background: #059669; color: white; box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);">Cek Daftar
-                    Belanja ➔</a>
-            </div>
-
-            <div class="nav-card">
-                <span class="status-badge" style="background:#f0fdfa; color:#0d9488;">SURVIVAL</span>
-                <div class="card-icon" style="color: #14b8a6; background: #f0fdfa;">🛡️</div>
-                <h3>Napas Bisnis (Runway)</h3>
-                <p>Estimasi ketahanan dana kas operasional (Bulan).</p>
-                <a href="runway.php" class="card-btn"
-                    style="background: #14b8a6; color: white; box-shadow: 0 4px 15px rgba(20, 184, 166, 0.3);">Cek
-                    Status Aman ➔</a>
-            </div>
         </section>
 
     </main>
