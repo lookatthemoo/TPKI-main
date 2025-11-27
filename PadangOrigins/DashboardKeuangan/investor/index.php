@@ -10,7 +10,7 @@ $fileRekening = '../data/rekening.json';
 $jamSekarang = (int)date('H');
 $hariSekarang = date('N'); 
 $isMarketOpen = ($hariSekarang <= 5 && $jamSekarang >= 9 && $jamSekarang < 16);
-$isMarketOpen = true; // Mode Cheat: Pasar Selalu Buka
+//$isMarketOpen = true;
 
 // Ambil Data
 $myPortfolio = file_exists($filePortfolio) ? json_decode(file_get_contents($filePortfolio), true) : [];

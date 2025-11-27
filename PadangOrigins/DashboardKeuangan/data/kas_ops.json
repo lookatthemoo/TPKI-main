@@ -1,26 +1,3 @@
 [
-    {
-        "id": "OPS-6924c6e76df66",
-        "tanggal": "2025-11-25 03:58:15",
-        "alasan_pengeluaran": "beli bensin",
-        "jumlah": 20000,
-        "sumber": "Kas Operasional",
-        "petugas": "admin"
-    },
-    {
-        "id": "OPS-6926b2fd2af2a",
-        "tanggal": "2025-11-26 14:57:49",
-        "alasan_pengeluaran": "beli sabu",
-        "jumlah": 100000,
-        "sumber": "Kas Operasional",
-        "petugas": "admin"
-    },
-    {
-        "id": "OPS-69286508924fa",
-        "tanggal": "2025-11-27 21:49:44",
-        "alasan_pengeluaran": "beli bensin",
-        "jumlah": 20000000000,
-        "sumber": "Kas Operasional",
-        "petugas": "admin"
-    }
+
 ]

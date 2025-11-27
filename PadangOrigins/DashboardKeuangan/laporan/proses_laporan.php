@@ -19,20 +19,41 @@ $configFile     = $dataDir . 'laporan_config.json';
 // --- HELPER FUNCTION ---
 function getJson($file) {
     if (!file_exists($file)) {
-        // Jika file tidak ada, buat file baru dengan isi array kosong
         file_put_contents($file, '[]');
         return [];
     }
     $content = file_get_contents($file);
     $data = json_decode($content, true);
-    return is_array($data) ? $data : []; // Pastikan selalu return array
+    return is_array($data) ? $data : [];
 }
 
 function saveJson($file, $data) {
-    // Menggunakan LOCK_EX agar tidak bentrok saat disimpan
     $success = file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), LOCK_EX);
     if ($success === false) {
         die("Error: Gagal menyimpan ke file $file. Cek permission folder.");
+    }
+}
+
+// --- FUNGSI KHUSUS UPDATE SALDO BANK ---
+function updateSaldoBank($namaBank, $jumlah, $isPemasukan = true) {
+    global $fileRekening;
+    $rekeningData = getJson($fileRekening);
+    $updated = false;
+
+    foreach ($rekeningData as &$rek) {
+        if ($rek['nama_bank'] === $namaBank) {
+            if ($isPemasukan) {
+                $rek['saldo'] += $jumlah;
+            } else {
+                $rek['saldo'] -= $jumlah;
+            }
+            $updated = true;
+            break;
+        }
+    }
+
+    if ($updated) {
+        saveJson($fileRekening, $rekeningData);
     }
 }
 
@@ -43,13 +64,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idTrx = 'TRX-' . time();
 
     // ==============================================================
-    // 1. AMBIL KAS OPS (LOGIKA UTAMA)
+    // 1. AMBIL KAS OPS
     // ==============================================================
     if ($action === 'simpan_ops') {
         $alasan = htmlspecialchars($_POST['alasan']); 
         $jumlah = (int)$_POST['jumlah'];
 
-        // A. Simpan ke Detail Kas Ops (kas_ops.json)
+        // A. Simpan ke Detail Kas Ops
         $opsData = getJson($fileKasOps);
         $opsData[] = [
             'id' => uniqid('OPS-'),
@@ -61,13 +82,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
         saveJson($fileKasOps, $opsData);
 
-        // B. Simpan ke Log Global (transaksi.json) -> INI YANG MEMOTONG SALDO
+        // B. Simpan ke Log Global (Untuk Arus Kas Harian)
         $trxData = getJson($fileTrx);
         $trxData[] = [
             'id' => uniqid('TRX-OPS-'),
             'tanggal' => $tanggal,
             'tipe' => 'pengeluaran',
-            'akun_sumber' => 'kas_ops', // Wajib 'kas_ops' agar saldo berkurang
+            'akun_sumber' => 'kas_ops',
             'akun_tujuan' => 'Pengeluaran',
             'jumlah' => $jumlah,
             'deskripsi' => "Kas Ops: $alasan",
@@ -75,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
         saveJson($fileTrx, $trxData);
 
-        // C. Simpan ke Pusat Pengeluaran (pengeluaran.json) -> AGAR MUNCUL DI TABEL PENGELUARAN
+        // C. Simpan ke Pusat Pengeluaran
         $pengeluaranData = getJson($filePengeluaran);
         $pengeluaranData[] = [
             'id' => uniqid('EXP-OPS-'),
@@ -93,18 +114,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // --- 2. TRANSFER ANTAR KAS ---
+    // ==============================================================
+    // 2. TRANSFER ANTAR KAS (PERBAIKAN DISINI)
+    // ==============================================================
     if ($action === 'transfer_kas') {
         $jumlah = (int)$_POST['jumlah'];
-        $sumber = $_POST['sumber']; $tujuan = $_POST['tujuan']; $catatan = $_POST['catatan'];
+        $sumber = $_POST['sumber']; 
+        $tujuan = $_POST['tujuan']; 
+        $catatan = $_POST['catatan'];
         
+        // A. Catat Log Transaksi (Agar muncul di tabel mutasi)
         $trxData = getJson($fileTrx);
         $trxData[] = [
-            'id' => $idTrx, 'tanggal' => $tanggal, 'tipe' => 'transfer',
-            'akun_sumber' => $sumber, 'akun_tujuan' => $tujuan,
-            'jumlah' => $jumlah, 'deskripsi' => "Transfer: $sumber -> $tujuan ($catatan)", 'pelaku' => $user
+            'id' => $idTrx, 
+            'tanggal' => $tanggal, 
+            'tipe' => 'transfer',
+            'akun_sumber' => $sumber, 
+            'akun_tujuan' => $tujuan,
+            'jumlah' => $jumlah, 
+            'deskripsi' => "Transfer: $sumber -> $tujuan ($catatan)", 
+            'pelaku' => $user
         ];
         saveJson($fileTrx, $trxData);
+
+        // B. UPDATE SALDO REAL DI REKENING.JSON (Jika Bank Terlibat)
+        
+        // Cek Sumber: Jika sumbernya Bank (Bukan Kas Laci/Ops), kurangi saldonya
+        if ($sumber !== 'kas_laci' && $sumber !== 'kas_ops') {
+            updateSaldoBank($sumber, $jumlah, false); // false = Pengurangan
+        }
+
+        // Cek Tujuan: Jika tujuannya Bank (Bukan Kas Laci/Ops), tambah saldonya
+        if ($tujuan !== 'kas_laci' && $tujuan !== 'kas_ops') {
+            updateSaldoBank($tujuan, $jumlah, true); // true = Penambahan
+        }
+
         header('Location: index.php?status=success_transfer'); exit;
     }
 
@@ -147,6 +191,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         saveJson($fileLaporan, $laporanData);
         saveJson($fileTrx, []); // Reset Transaksi Harian
         header('Location: index.php?status=success_close'); exit;
+    }
+    
+    // --- 5. PRIVE OWNER (TARIK DANA) ---
+    if ($action === 'tarik_prive') {
+        $jumlah = (int)$_POST['jumlah'];
+        $sumber = $_POST['sumber'];
+        $catatan = htmlspecialchars($_POST['catatan']);
+
+        // A. Catat Log Transaksi
+        $trxData = getJson($fileTrx);
+        $trxData[] = [
+            'id' => uniqid('PRV-'),
+            'tanggal' => $tanggal,
+            'tipe' => 'penarikan',
+            'akun_sumber' => $sumber,
+            'akun_tujuan' => 'Pribadi',
+            'jumlah' => $jumlah,
+            'deskripsi' => "Prive Owner: $catatan",
+            'pelaku' => $user
+        ];
+        saveJson($fileTrx, $trxData);
+
+        // B. Update Saldo Bank jika sumbernya Bank
+        if ($sumber !== 'kas_laci' && $sumber !== 'kas_ops') {
+            updateSaldoBank($sumber, $jumlah, false); // Kurangi
+        }
+
+        // C. Catat di Pengeluaran Global juga (sebagai Prive)
+        $pengeluaranData = getJson($filePengeluaran);
+        $pengeluaranData[] = [
+            'id' => uniqid('EXP-PRV-'),
+            'tanggal' => $tanggal,
+            'kategori' => 'Prive Owner',
+            'deskripsi' => "Penarikan Owner ($sumber)",
+            'penerima' => 'Owner',
+            'sumber_dana' => $sumber,
+            'jumlah' => $jumlah,
+            'admin' => $user
+        ];
+        saveJson($filePengeluaran, $pengeluaranData);
+
+        header('Location: index.php?status=success_prive'); exit;
     }
 }
 header('Location: index.php');

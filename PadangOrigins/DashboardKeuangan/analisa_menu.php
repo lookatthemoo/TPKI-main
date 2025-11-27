@@ -8,30 +8,37 @@ $fileTrx  = 'data/transaksi.json';
 $menus = file_exists($fileMenu) ? json_decode(file_get_contents($fileMenu), true) : [];
 $transaksi = file_exists($fileTrx) ? json_decode(file_get_contents($fileTrx), true) : [];
 
-// --- 2. HITUNG PERFORMA MENU ---
+// --- 2. FILTER PERIODE (1 BULAN TERAKHIR) ---
+$periodeBulan = date('Y-m-d', strtotime('-30 days')); 
+
+// --- 3. HITUNG PERFORMA MENU ---
 $menuPerformance = [];
 $totalQtySold = 0;
-$totalMargin = 0;
 
 // Inisialisasi Data Menu
 foreach ($menus as $m) {
-    // Estimasi HPP = 60% dari Harga Jual (Standar Resto Padang)
+    // Estimasi HPP & Margin tetap dihitung untuk Penentuan Kategori Matrix (Star/Dog), 
+    // tapi TIDAK AKAN DITAMPILKAN di card sesuai request.
     $hpp = $m['harga'] * 0.6;
     $margin = $m['harga'] - $hpp;
 
     $menuPerformance[$m['nama']] = [
         'nama' => $m['nama'],
         'harga' => $m['harga'],
-        'hpp' => $hpp,
-        'margin_per_unit' => $margin,
+        'margin_per_unit' => $margin, // Tetap disimpan untuk logika Matrix
         'qty_sold' => 0,
-        'total_profit' => 0,
         'img' => $m['gambar'] ?? 'default.jpg'
     ];
 }
 
-// Hitung Penjualan dari Transaksi
+// Hitung Penjualan dari Transaksi (Hanya 30 Hari Terakhir)
 foreach ($transaksi as $t) {
+    // Cek Tanggal (Filter 1 Bulan)
+    $tglTrx = substr($t['tanggal'], 0, 10); // Ambil YYYY-MM-DD
+    if ($tglTrx < $periodeBulan) {
+        continue; // Lewati transaksi lama
+    }
+
     if ($t['tipe'] === 'pendapatan' && isset($t['items'])) {
         foreach ($t['items'] as $item) {
             $namaMenu = $item['name'];
@@ -39,20 +46,18 @@ foreach ($transaksi as $t) {
 
             if (isset($menuPerformance[$namaMenu])) {
                 $menuPerformance[$namaMenu]['qty_sold'] += $qty;
-                $menuPerformance[$namaMenu]['total_profit'] += ($menuPerformance[$namaMenu]['margin_per_unit'] * $qty);
-                
                 $totalQtySold += $qty;
             }
         }
     }
 }
 
-// --- 3. TENTUKAN THRESHOLD (BATAS KATEGORI) ---
+// --- 4. TENTUKAN THRESHOLD (BATAS KATEGORI) ---
 $jumlahMenu = count($menuPerformance);
 if ($jumlahMenu > 0) {
     $avgPopularity = $totalQtySold / $jumlahMenu; // Rata-rata Penjualan
     
-    // Hitung Rata-rata Margin (Kontribusi)
+    // Rata-rata Margin (Untuk Sumbu Y Matrix)
     $sumMargin = 0;
     foreach($menuPerformance as $mp) $sumMargin += $mp['margin_per_unit'];
     $avgMargin = $sumMargin / $jumlahMenu;
@@ -61,7 +66,7 @@ if ($jumlahMenu > 0) {
     $avgMargin = 0;
 }
 
-// --- 4. KATEGORISASI (BCG MATRIX) ---
+// --- 5. KATEGORISASI (BCG MATRIX) ---
 $matrix = ['star' => [], 'cow' => [], 'puzzle' => [], 'dog' => []];
 
 foreach ($menuPerformance as $mp) {
@@ -69,20 +74,16 @@ foreach ($menuPerformance as $mp) {
     $isHighMargin = $mp['margin_per_unit'] >= $avgMargin;
 
     if ($isHighPop && $isHighMargin) {
-        $mp['cat'] = 'STAR';
-        $mp['desc'] = 'Menu Primadona! Pertahankan kualitas & stok.';
+        $mp['desc'] = 'Menu Favorit (Laris)';
         $matrix['star'][] = $mp;
     } elseif ($isHighPop && !$isHighMargin) {
-        $mp['cat'] = 'CASH COW';
-        $mp['desc'] = 'Laris tapi untung tipis. Coba naikkan harga sedikit.';
+        $mp['desc'] = 'Laris Manis';
         $matrix['cow'][] = $mp;
     } elseif (!$isHighPop && $isHighMargin) {
-        $mp['cat'] = 'PUZZLE';
-        $mp['desc'] = 'Untung besar tapi jarang laku. Butuh promo/foto menarik!';
+        $mp['desc'] = 'Jarang Laku';
         $matrix['puzzle'][] = $mp;
     } else {
-        $mp['cat'] = 'DOG';
-        $mp['desc'] = 'Kurang laku & untung kecil. Pertimbangkan hapus menu.';
+        $mp['desc'] = 'Kurang Diminati';
         $matrix['dog'][] = $mp;
     }
 }
@@ -130,14 +131,16 @@ foreach ($menuPerformance as $mp) {
 
         .menu-item {
             display: flex; align-items: center; gap: 10px; padding: 10px;
-            background: rgba(255,255,255,0.6); border-radius: 12px;
+            background: rgba(255,255,255,0.8); border-radius: 12px;
             margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.05); backdrop-filter: blur(5px);
         }
         .menu-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; background: #ddd; }
         .menu-info { flex: 1; }
-        .menu-name { font-weight: 700; font-size: 0.95rem; display: block; }
-        .menu-stat { font-size: 0.8rem; color: #64748b; }
-        .menu-profit { font-weight: 700; color: #16a34a; font-size: 0.85rem; }
+        .menu-name { font-weight: 700; font-size: 0.95rem; display: block; color: #334155; }
+        
+        /* Style baru untuk status penjualan */
+        .status-sold { font-size: 0.85rem; color: #15803d; background: #dcfce7; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 4px; font-weight: 600; }
+        .status-zero { font-size: 0.85rem; color: #b91c1c; background: #fee2e2; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 4px; font-weight: 600; }
 
         /* Responsive */
         @media (max-width: 768px) { .matrix-container { grid-template-columns: 1fr; } }
@@ -147,8 +150,8 @@ foreach ($menuPerformance as $mp) {
 
     <header class="eng-header">
         <div>
-            <h1 style="font-size: 1.5rem; font-weight: 800; color: #0f172a;">🧩 Analisa menu</h1>
-            <p style="color: #64748b; font-size: 0.9rem;">Analisa Profitabilitas & Popularitas</p>
+            <h1 style="font-size: 1.5rem; font-weight: 800; color: #0f172a;">🧩 Analisa Menu (1 Bulan)</h1>
+            <p style="color: #64748b; font-size: 0.9rem;">Periode: <?= date('d M', strtotime($periodeBulan)) . ' - ' . date('d M Y'); ?></p>
         </div>
         <a href="index.php" class="back-btn">← Dashboard</a>
     </header>
@@ -158,19 +161,22 @@ foreach ($menuPerformance as $mp) {
         <div class="matrix-card card-star">
             <div class="cat-icon">🌟</div>
             <h2 class="cat-title" style="color:#b45309;">STARS</h2>
-            <p class="cat-desc">Menu Paling Sempurna! Laris & Untung Gede.</p>
+            <p class="cat-desc">Menu Paling Populer (Terlaris)</p>
             
             <?php if(empty($matrix['star'])): ?>
-                <p style="text-align:center; color:#999; margin-top:20px;">Belum ada menu di kategori ini.</p>
+                <p style="text-align:center; color:#999; margin-top:20px;">Kosong.</p>
             <?php else: ?>
                 <?php foreach($matrix['star'] as $m): ?>
                     <div class="menu-item">
-                        <img src="../../menu/images/<?= $m['img']; ?>" class="menu-thumb" onerror="this.src='https://via.placeholder.com/40'">
+                        <img src="../menu/images/<?= $m['img']; ?>" class="menu-thumb" onerror="this.src='https://via.placeholder.com/40'">
                         <div class="menu-info">
                             <span class="menu-name"><?= $m['nama']; ?></span>
-                            <span class="menu-stat">Terjual: <b><?= number_format($m['qty_sold']); ?></b></span>
+                            <?php if($m['qty_sold'] > 0): ?>
+                                <span class="status-sold">Terjual: <?= number_format($m['qty_sold']); ?> Porsi</span>
+                            <?php else: ?>
+                                <span class="status-zero">TIDAK TERJUAL (0)</span>
+                            <?php endif; ?>
                         </div>
-                        <div class="menu-profit">+Rp <?= number_format($m['margin_per_unit']); ?>/porsi</div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
@@ -179,19 +185,22 @@ foreach ($menuPerformance as $mp) {
         <div class="matrix-card card-cow">
             <div class="cat-icon">🐮</div>
             <h2 class="cat-title" style="color:#047857;">CASH COWS</h2>
-            <p class="cat-desc">Sapi Perah. Sangat laris, tapi margin tipis. <br><b>Saran:</b> Naikkan harga sedikit atau kurangi porsi.</p>
+            <p class="cat-desc">Penjualan Stabil / Lumayan</p>
             
             <?php if(empty($matrix['cow'])): ?>
-                <p style="text-align:center; color:#999; margin-top:20px;">Belum ada menu di kategori ini.</p>
+                <p style="text-align:center; color:#999; margin-top:20px;">Kosong.</p>
             <?php else: ?>
                 <?php foreach($matrix['cow'] as $m): ?>
                     <div class="menu-item">
                         <img src="../menu/images/<?= $m['img']; ?>" class="menu-thumb" onerror="this.src='https://via.placeholder.com/40'">
                         <div class="menu-info">
                             <span class="menu-name"><?= $m['nama']; ?></span>
-                            <span class="menu-stat">Terjual: <b><?= number_format($m['qty_sold']); ?></b></span>
+                            <?php if($m['qty_sold'] > 0): ?>
+                                <span class="status-sold">Terjual: <?= number_format($m['qty_sold']); ?> Porsi</span>
+                            <?php else: ?>
+                                <span class="status-zero">TIDAK TERJUAL (0)</span>
+                            <?php endif; ?>
                         </div>
-                        <div class="menu-profit" style="color:#059669;">+Rp <?= number_format($m['margin_per_unit']); ?>/porsi</div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
@@ -200,19 +209,22 @@ foreach ($menuPerformance as $mp) {
         <div class="matrix-card card-puzzle">
             <div class="cat-icon">🧩</div>
             <h2 class="cat-title" style="color:#1d4ed8;">PUZZLES</h2>
-            <p class="cat-desc">Tanda Tanya. Untung gede, tapi jarang laku. <br><b>Saran:</b> Genjot promosi, foto ulang, atau diskon.</p>
+            <p class="cat-desc">Potensi Tinggi tapi Jarang Dibeli</p>
             
             <?php if(empty($matrix['puzzle'])): ?>
-                <p style="text-align:center; color:#999; margin-top:20px;">Belum ada menu di kategori ini.</p>
+                <p style="text-align:center; color:#999; margin-top:20px;">Kosong.</p>
             <?php else: ?>
                 <?php foreach($matrix['puzzle'] as $m): ?>
                     <div class="menu-item">
-                        <img src="../../menu/images/<?= $m['img']; ?>" class="menu-thumb" onerror="this.src='https://via.placeholder.com/40'">
+                        <img src="../menu/images/<?= $m['img']; ?>" class="menu-thumb" onerror="this.src='https://via.placeholder.com/40'">
                         <div class="menu-info">
                             <span class="menu-name"><?= $m['nama']; ?></span>
-                            <span class="menu-stat">Terjual: <b><?= number_format($m['qty_sold']); ?></b></span>
+                            <?php if($m['qty_sold'] > 0): ?>
+                                <span class="status-sold">Terjual: <?= number_format($m['qty_sold']); ?> Porsi</span>
+                            <?php else: ?>
+                                <span class="status-zero">TIDAK TERJUAL (0)</span>
+                            <?php endif; ?>
                         </div>
-                        <div class="menu-profit" style="color:#2563eb;">+Rp <?= number_format($m['margin_per_unit']); ?>/porsi</div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
@@ -221,29 +233,28 @@ foreach ($menuPerformance as $mp) {
         <div class="matrix-card card-dog">
             <div class="cat-icon">🐕</div>
             <h2 class="cat-title" style="color:#b91c1c;">DOGS</h2>
-            <p class="cat-desc">Beban. Sudah tidak laku, untungnya kecil pula. <br><b>Saran:</b> Hapus dari menu ganti yang baru.</p>
+            <p class="cat-desc">Kurang Peminat (Evaluasi)</p>
             
             <?php if(empty($matrix['dog'])): ?>
                 <p style="text-align:center; color:#999; margin-top:20px;">Aman! Tidak ada menu beban.</p>
             <?php else: ?>
                 <?php foreach($matrix['dog'] as $m): ?>
                     <div class="menu-item">
-                        <img src="../../menu/images/<?= $m['img']; ?>" class="menu-thumb" onerror="this.src='https://via.placeholder.com/40'">
+                        <img src="../menu/images/<?= $m['img']; ?>" class="menu-thumb" onerror="this.src='https://via.placeholder.com/40'">
                         <div class="menu-info">
                             <span class="menu-name"><?= $m['nama']; ?></span>
-                            <span class="menu-stat">Terjual: <b><?= number_format($m['qty_sold']); ?></b></span>
+                            <?php if($m['qty_sold'] > 0): ?>
+                                <span class="status-sold">Terjual: <?= number_format($m['qty_sold']); ?> Porsi</span>
+                            <?php else: ?>
+                                <span class="status-zero">TIDAK TERJUAL (0)</span>
+                            <?php endif; ?>
                         </div>
-                        <div class="menu-profit" style="color:#dc2626;">+Rp <?= number_format($m['margin_per_unit']); ?>/porsi</div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
 
     </main>
-
-    <div style="text-align:center; padding: 2rem; color:#94a3b8; font-size:0.85rem;">
-        *Analisa berdasarkan Data Transaksi Aktual & Estimasi Margin 40%
-    </div>
 
 </body>
 </html>

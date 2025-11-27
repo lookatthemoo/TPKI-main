@@ -42,11 +42,13 @@ foreach ($historiLaporan as $lap) {
     if ($lap['tanggal'] === $hariIni) { $sudahTutupBuku = true; break; }
 }
 
-// Hitung Saldo Bank Realtime
+// 1. Ambil Saldo Awal Bank (INI DATA REAL DARI FILE)
 $saldoPerBank = [];
-foreach ($rekeningList as $rek) { $saldoPerBank[$rek['nama_bank']] = (int)$rek['saldo']; }
+foreach ($rekeningList as $rek) { 
+    $saldoPerBank[$rek['nama_bank']] = (int)$rek['saldo']; 
+}
 
-// Hitung Mutasi Kas Laci & Ops dari Transaksi
+// 2. Hitung Mutasi Kas Laci & Kas Ops SAJA (Bank Jangan Dihitung Ulang)
 foreach ($trxData as $t) {
     $jumlah = (int)$t['jumlah'];
     $tipe = $t['tipe'];
@@ -54,23 +56,24 @@ foreach ($trxData as $t) {
     $akunTujuan = $t['akun_tujuan'] ?? 'kas_laci'; 
 
     if ($tipe === 'pendapatan') {
+        // HANYA TAMBAH KAS LACI. BANK JANGAN DISENTUH (Sudah update di file)
         if ($akunTujuan === 'kas_laci') $kasLaci += $jumlah;
     } 
     elseif ($tipe === 'pengeluaran' || $tipe === 'penarikan') {
-        if ($akunSumber === 'kas_laci') $kasLaci -= $jumlah;
-        elseif ($akunSumber === 'kas_ops') $kasOps -= $jumlah; // PENGURANGAN SALDO OPS
-        elseif (isset($saldoPerBank[$akunSumber])) $saldoPerBank[$akunSumber] -= $jumlah;
-    }
-    elseif ($tipe === 'transfer') {
-        // Kurangi Sumber
+        // HANYA KURANGI KAS LACI & OPS
         if ($akunSumber === 'kas_laci') $kasLaci -= $jumlah;
         elseif ($akunSumber === 'kas_ops') $kasOps -= $jumlah;
-        elseif (isset($saldoPerBank[$akunSumber])) $saldoPerBank[$akunSumber] -= $jumlah;
+    }
+    elseif ($tipe === 'transfer') {
+        // HANYA PROSES JIKA MELIBATKAN KAS LACI / OPS
+        
+        // Kurangi Sumber (Jika Kas)
+        if ($akunSumber === 'kas_laci') $kasLaci -= $jumlah;
+        elseif ($akunSumber === 'kas_ops') $kasOps -= $jumlah;
 
-        // Tambah Tujuan
+        // Tambah Tujuan (Jika Kas)
         if ($akunTujuan === 'kas_laci') $kasLaci += $jumlah;
         elseif ($akunTujuan === 'kas_ops') $kasOps += $jumlah;
-        elseif (isset($saldoPerBank[$akunTujuan])) $saldoPerBank[$akunTujuan] += $jumlah;
     }
 }
 
@@ -147,6 +150,7 @@ $totalAset = $kasLaci + $kasOps + $totalSaldoBank;
                     <button onclick="openModal('transfer','kas_laci','kas_laci')" class="btn-mini bg-blue">Setor Bank</button>
                 </div>
             </div>
+            
             <div class="balance-card card-ops">
                 <div><h4>⚡ Kas Operasional</h4><div class="balance-value">Rp <?php echo number_format(max(0, $kasOps)); ?></div></div>
                 <div class="action-row">
@@ -154,6 +158,7 @@ $totalAset = $kasLaci + $kasOps + $totalSaldoBank;
                     <button onclick="openModal('transfer','kas_ops')" class="btn-mini bg-purple">Topup</button>
                 </div>
             </div>
+            
             <div class="balance-card card-bank">
                 <div><h4>🏦 Rekening & E-Wallet</h4><div class="balance-value">Rp <?php echo number_format(max(0, $totalSaldoBank)); ?></div></div>
                 <div class="bank-list">
@@ -260,7 +265,17 @@ $totalAset = $kasLaci + $kasOps + $totalSaldoBank;
         </div>
     </div>
 
-
+    <div id="modalAddReport" class="modal-overlay">
+        <div class="modal-box">
+            <div style="display:flex; justify-content:space-between; margin-bottom:1rem;"><h2>Tambah Widget</h2><span onclick="document.getElementById('modalAddReport').style.display='none'" style="cursor:pointer;">×</span></div>
+            <form method="POST" action="proses_laporan.php">
+                <input type="hidden" name="action" value="tambah_widget">
+                <label>Judul</label><input type="text" name="nama_laporan" class="form-control" required>
+                <label>Pilih JSON</label><select name="sumber_json" class="form-control"><?php foreach ($jsonFiles as $f) echo "<option value='$f'>$f</option>"; ?></select>
+                <button type="submit" style="width:100%; background:#2c3e50; color:white; padding:10px; border:none; border-radius:8px;">Tampilkan</button>
+            </form>
+        </div>
+    </div>
 
     <div id="modalTutup" class="modal-overlay">
         <div class="modal-box">

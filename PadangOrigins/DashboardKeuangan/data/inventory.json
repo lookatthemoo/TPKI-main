@@ -13,11 +13,11 @@
         "id": "item_6926c28411706",
         "nama": "Beras",
         "kategori": "Bahan Mentah",
-        "qty": 10,
+        "qty": 5,
         "satuan": "liter",
-        "harga": 12000,
-        "total_nilai": 120000,
-        "updated_at": "2025-11-26 09:04:40"
+        "harga": 10000,
+        "total_nilai": 30000,
+        "updated_at": "2025-11-27 22:32:30"
     },
     {
         "id": "item_6926c31421b86",
