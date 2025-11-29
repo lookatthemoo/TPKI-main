@@ -26,5 +26,12 @@
         "harga": 16000,
         "deskripsi": "test",
         "gambar": "menu_1763883443.jpeg"
+    },
+    {
+        "id": "MENU-1764322784",
+        "nama": "rendng",
+        "harga": 25000,
+        "deskripsi": "sangat enak",
+        "gambar": "menu_1764322784.jpeg"
     }
 ]

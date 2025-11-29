@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Procurement - PadangOrigins</title>
+    <title>Smart Procurement - Antara33</title>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
@@ -194,10 +194,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             
             <div class="shop-card">
                 <div style="padding: 20px; border-bottom: 1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center;">
-                    <h3 style="color:#0f172a;">📋 Barang Stok Kritis (< 5)</h3>
+                    <h3 style="color:#0f172a;">📋 Barang Stok Kritis </h3>
                     
                     <?php 
-                        $waText = "Daftar Belanja PadangOrigins:%0a";
+                        $waText = "Daftar Belanja Antara33:%0a";
                         foreach($lowStockItems as $ls) {
                             $waText .= "- " . $ls['nama'] . " (" . $ls['saran_beli'] . " " . ($ls['satuan'] ?? 'pcs') . ")%0a";
                         }

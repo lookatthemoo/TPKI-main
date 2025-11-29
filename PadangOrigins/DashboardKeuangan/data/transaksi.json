@@ -1,3 +1,78 @@
 [
-
+    {
+        "id": "order_69296d5dac22f",
+        "tanggal": "2025-11-28 09:37:33",
+        "tipe": "pendapatan",
+        "status": "Telah Diambil",
+        "jumlah": 66000,
+        "akun_sumber": "Customer",
+        "akun_tujuan": "kas_laci",
+        "deskripsi": "Order (budi): 3x Ayam Laos",
+        "pelaku": "System",
+        "items": [
+            {
+                "name": "Ayam Laos",
+                "price": 22000,
+                "qty": 3
+            }
+        ],
+        "customer_name": "budi"
+    },
+    {
+        "id": "order_69296d82c4036",
+        "tanggal": "2025-11-28 09:38:10",
+        "tipe": "pendapatan",
+        "status": "Telah Diambil",
+        "jumlah": 22000,
+        "akun_sumber": "Customer",
+        "akun_tujuan": "BCA",
+        "deskripsi": "Order (wili): 1x Ayam Laos",
+        "pelaku": "System",
+        "items": [
+            {
+                "name": "Ayam Laos",
+                "price": 22000,
+                "qty": 1
+            }
+        ],
+        "customer_name": "wili"
+    },
+    {
+        "id": "order_69296f14b55a0",
+        "tanggal": "2025-11-28 09:44:52",
+        "tipe": "pendapatan",
+        "status": "Diterima",
+        "jumlah": 176000,
+        "akun_sumber": "Customer",
+        "akun_tujuan": "SeaBank",
+        "deskripsi": "Order (jefri): 8x Ayam Laos",
+        "pelaku": "System",
+        "items": [
+            {
+                "name": "Ayam Laos",
+                "price": 22000,
+                "qty": 8
+            }
+        ],
+        "customer_name": "jefri"
+    },
+    {
+        "id": "order_69296f488cb80",
+        "tanggal": "2025-11-28 09:45:44",
+        "tipe": "pendapatan",
+        "status": "Diterima",
+        "jumlah": 5000000,
+        "akun_sumber": "Customer",
+        "akun_tujuan": "SeaBank",
+        "deskripsi": "Order (jefri): 200x Gulai Cincang",
+        "pelaku": "System",
+        "items": [
+            {
+                "name": "Gulai Cincang",
+                "price": 25000,
+                "qty": 200
+            }
+        ],
+        "customer_name": "jefri"
+    }
 ]

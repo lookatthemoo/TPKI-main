@@ -1,22 +1,12 @@
 [
     {
-        "id": "EXP-SHOP-6928d17ef3cd9",
-        "tanggal": "2025-11-27 22:32:30",
+        "id": "EXP-SHOP-69296f9f8b60e",
+        "tanggal": "2025-11-28 09:47:11",
         "kategori": "Belanja Bahan Baku",
-        "deskripsi": "Restock: Beras (+2 liter)",
+        "deskripsi": "Restock: Beras (+15 liter), bawang (+18 kg)",
         "penerima": "Vendor Pasar",
         "sumber_dana": "SeaBank",
-        "jumlah": 20000,
-        "admin": "admin"
-    },
-    {
-        "id": "EXP-OPS-6928d20e95ba1",
-        "tanggal": "2025-11-28 05:34:54",
-        "kategori": "Operasional",
-        "deskripsi": "cb",
-        "penerima": "-",
-        "sumber_dana": "Kas Operasional",
-        "jumlah": 25000,
+        "jumlah": 420000,
         "admin": "admin"
     }
 ]

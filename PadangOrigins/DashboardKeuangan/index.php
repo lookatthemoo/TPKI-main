@@ -175,6 +175,16 @@ $totalMenu = count($menuList);
                     Berita ➔</a>
             </div>
 
+            <div class="nav-card" style="border: 2px solid #1e293b;">
+                <span class="status-badge" style="background:#0f172a; color:#fff;">REMINDER</span>
+                <div class="card-icon" style="color: #0f172a; background: #e2e8f0;">⚖️</div>
+                <h3>Closing & Nasihat</h3>
+                <p>Cek kesimpulan data & pengingat penting hari ini.</p>
+                <a href="closing.php" class="card-btn"
+                    style="background: #0f172a; color: white; box-shadow: 0 4px 15px rgba(15, 23, 42, 0.4);">
+                    Buka Closing ➔</a>
+            </div>
+
 
         </section>
 

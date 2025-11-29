@@ -13,11 +13,11 @@
         "id": "item_6926c28411706",
         "nama": "Beras",
         "kategori": "Bahan Mentah",
-        "qty": 5,
+        "qty": 20,
         "satuan": "liter",
         "harga": 10000,
         "total_nilai": 30000,
-        "updated_at": "2025-11-27 22:32:30"
+        "updated_at": "2025-11-28 09:47:11"
     },
     {
         "id": "item_6926c31421b86",
@@ -548,5 +548,15 @@
         "harga": "100000",
         "total_nilai": 400000,
         "updated_at": "2025-11-26 18:31:46"
+    },
+    {
+        "id": "item_69296e7219c04",
+        "nama": "bawang",
+        "kategori": "Bahan Mentah",
+        "qty": 20,
+        "satuan": "kg",
+        "harga": 15000,
+        "total_nilai": 30000,
+        "updated_at": "2025-11-28 09:47:11"
     }
 ]

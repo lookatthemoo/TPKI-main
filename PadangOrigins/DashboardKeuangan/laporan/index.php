@@ -137,7 +137,7 @@ $totalAset = $kasLaci + $kasOps + $totalSaldoBank;
         <?php endif; ?>
 
         <div class="header-summary">
-            <div class="header-title"><h2>Total Aset Likuid</h2><div class="header-amount">Rp <?php echo number_format($totalAset, 0, ',', '.'); ?></div></div>
+            <div class="header-title"><h2>Total Penjualan</h2><div class="header-amount">Rp <?php echo number_format($totalAset, 0, ',', '.'); ?></div></div>
             <?php if ($sudahTutupBuku): ?><button class="btn-disabled-tutup">✅ Sudah Tutup Buku</button>
             <?php else: ?><button onclick="document.getElementById('modalTutup').style.display='flex'" class="btn-tutup-buku">📕 Tutup Buku Hari Ini</button><?php endif; ?>
         </div>
